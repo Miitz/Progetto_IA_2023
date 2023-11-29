@@ -68,6 +68,20 @@
         </attributes>
         <coordinate angle="0.0" x="0.0" y="13.0" z="0.0"/>
       </entity>
+      <entity atom="barattolo_1484052030551" type="Barattolo">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>barattolo</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="1.0" y="12.0" z="0.0"/>
+      </entity>
       <entity atom="foglio_1484052030554" type="Foglio">
         <attributes>
           <attribute name="contain_ability">

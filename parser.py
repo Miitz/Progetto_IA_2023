@@ -61,7 +61,7 @@ def xml_parser(file_path: str) -> dict:
         for elem in surface_list:
             if elem.capitalize() in ["Television"]:
                 dizionario['rooms']["LivingRoom"] += 1
-            elif elem.capitalize() in pt_db.ASSET_DATABASE:
+            elif elem.capitalize() in pt_db.ASSET_DATABASE or elem in pt_db.ASSET_DATABASE:
                 room_annotations = {
                     "inKitchens": "Kitchen",
                     "inLivingRooms": "LivingRoom",

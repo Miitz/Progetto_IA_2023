@@ -1,1 +1,1 @@
-{"Kitchen": ["Cucina"], "Bathroom": ["Bagno"], "LivingRoom": ["Soggiorno"], "Bedroom": ["Camera da Letto", "Camera"]}
+{"Kitchen": ["Cucina"], "Bathroom": ["Bagno", "Lavanderia"], "LivingRoom": ["Soggiorno", "Sala", "Salone"], "Bedroom": ["Camera da Letto", "Camera"]}

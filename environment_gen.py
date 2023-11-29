@@ -69,14 +69,6 @@ def environment_generator(dizionario: dict):
             room_obj[k] = {'position': v["position"], 'contain': [other_v for other_v in dizionario['objects'].keys()
                                                                   if dizionario['objects'][other_v]["position"] == v[
                                                                       "position"] and other_v != k]}
-    new_room_obj = {}
-    for k, v in room_obj.items():
-        new_room_obj[k] = {'near': [_check_distance(v, v2, 2, k2) for k2, v2 in room_obj.items() if
-                                    room_obj[k] != room_obj[k2]]}
-        if None in new_room_obj[k]['near']: new_room_obj[k]['near'] = list(filter(None.__ne__, new_room_obj[k]['near']))
-        if False in new_room_obj[k]['near']: new_room_obj[k]['near'] = list(
-            filter(False.__ne__, new_room_obj[k]['near']))
-        room_obj[k].update(new_room_obj[k])
 
     print(room_obj)
 

@@ -116,6 +116,22 @@
         </attributes>
         <coordinate angle="0.0" x="9.0" y="14.0" z="0.0"/>
       </entity>
+      <entity atom="caffettiera_1484051998943" type="Caffettiera">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>caffettiera</value>
+            <value>macchina_del_caffe</value>
+            <value>macchinetta_del_caffe</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="10.0" y="3.0" z="0.0"/>
+      </entity>
     </entities>
   </semanticMap>
   <lexicalGroundings/>

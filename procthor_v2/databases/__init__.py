@@ -249,6 +249,6 @@ DEFAULT_PROCTHOR_DATABASE = ProcTHORDatabase(
         "Bedroom": ["Bed", "Dresser"],
         "LivingRoom": ["Television", "DiningTable", "Sofa"],
         "Kitchen": ["CounterTop", "Fridge"],
-        "Bathroom": ["Toilet", "Sink"],
+        "Bathroom": ["Toilet", "Sink", "WashingMachine"],
     },
 )
