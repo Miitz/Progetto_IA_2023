@@ -134,6 +134,20 @@
         </attributes>
         <coordinate angle="0.0" x="6.0" y="14.0" z="0.0"/>
       </entity>
+      <entity atom="pianta_1484052147789" type="Pianta">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>true</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>pianta</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="6.0" y="14.0" z="0.0"/>
+      </entity>
     </entities>
   </semanticMap>
   <lexicalGroundings/>

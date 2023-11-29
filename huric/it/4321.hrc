@@ -137,6 +137,20 @@
         </attributes>
         <coordinate angle="0.0" x="4.0" y="2.0" z="0.0"/>
       </entity>
+      <entity atom="rivista_1484052184625" type="Rivista">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>rivista</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="4.0" y="2.0" z="0.0"/>
+      </entity>
     </entities>
   </semanticMap>
   <lexicalGroundings/>

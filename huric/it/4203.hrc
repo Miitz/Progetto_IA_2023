@@ -132,6 +132,20 @@
         </attributes>
         <coordinate angle="0.0" x="0.0" y="13.0" z="0.0"/>
       </entity>
+      <entity atom="telecomando_1484051997148" type="Telecomando">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>telecomando</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="5.0" y="12.0" z="0.0"/>
+      </entity>
     </entities>
   </semanticMap>
   <lexicalGroundings/>

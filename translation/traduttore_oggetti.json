@@ -22,6 +22,7 @@
     "Letto"
   ],
   "Blinds": [
+    "Persiane",
     "Tende",
     "Tende alla veneziana"
   ],
@@ -56,6 +57,7 @@
     "Carrello"
   ],
   "CellPhone": [
+    "Telefono",
     "Cellulare"
   ],
   "Chair": [
@@ -121,6 +123,8 @@
     "Rubinetto"
   ],
   "FloorLamp": [
+    "Luce",
+    "Lampada",
     "Lampada da terra"
   ],
   "Footstool": [
@@ -155,6 +159,7 @@
     "Bollitore"
   ],
   "KeyChain": [
+    "Chiavi",
     "Portachiavi"
   ],
   "Knife": [
@@ -164,6 +169,7 @@
     "Mestolo"
   ],
   "Laptop": [
+    "Tablet",
     "Portatile",
     "Computer",
     "Laptop",
@@ -188,12 +194,14 @@
     "Tazzone"
   ],
   "Newspaper": [
+    "Rivista",
     "Giornale"
   ],
   "Ottoman": [
     "Pouf"
   ],
   "Painting": [
+    "Poster",
     "Quadro"
   ],
   "Pan": [
@@ -242,6 +250,7 @@
     "Spazzola per strofinare"
   ],
   "ShelvingUnit": [
+    "Libreria",
     "Scaffalatura"
   ],
   "ShowerCurtain": [
@@ -255,6 +264,7 @@
     "Tavolino laterale"
   ],
   "Sink": [
+    "Rubinetto",
     "Lavello",
     "Lavandino"
   ],
@@ -329,6 +339,7 @@
     "Aspirapolvere"
   ],
   "Vase": [
+    "Vasetto",
     "Vaso"
   ],
   "WashingMachine": [

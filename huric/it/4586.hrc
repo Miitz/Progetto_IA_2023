@@ -133,6 +133,20 @@
         </attributes>
         <coordinate angle="0.0" x="5.0" y="8.0" z="0.0"/>
       </entity>
+      <entity atom="lavatrice_1484052265212" type="Lavatrice">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>true</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>true</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>lavatrice</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="0.0" y="13.0" z="0.0"/>
+      </entity>
     </entities>
   </semanticMap>
   <lexicalGroundings/>

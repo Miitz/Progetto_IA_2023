@@ -135,6 +135,20 @@
         </attributes>
         <coordinate angle="0.0" x="11.0" y="6.0" z="0.0"/>
       </entity>
+      <entity atom="forchetta_1484052180858" type="Forchetta">
+        <attributes>
+          <attribute name="contain_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="support_ability">
+            <value>false</value>
+          </attribute>
+          <attribute name="lexical_references">
+            <value>forchetta</value>
+          </attribute>
+        </attributes>
+        <coordinate angle="0.0" x="10.0" y="3.0" z="0.0"/>
+      </entity>
     </entities>
   </semanticMap>
   <lexicalGroundings/>
