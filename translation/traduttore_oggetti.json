@@ -1,0 +1,350 @@
+{
+  "AlarmClock": [
+    "Sveglia"
+  ],
+  "AluminumFoil": [
+    "Foglio di alluminio"
+  ],
+  "Apple": [
+    "Frutto",
+    "Mela"
+  ],
+  "ArmChair": [
+    "Poltrona"
+  ],
+  "BaseballBat": [
+    "Mazza da baseball"
+  ],
+  "BasketBall": [
+    "Pallacanestro"
+  ],
+  "Bed": [
+    "Letto"
+  ],
+  "Blinds": [
+    "Tende",
+    "Tende alla veneziana"
+  ],
+  "Book": [
+    "Libro"
+  ],
+  "Boots": [
+    "Stivali"
+  ],
+  "Bottle": [
+    "Bottiglia"
+  ],
+  "Bowl": [
+    "Ciotola"
+  ],
+  "Box": [
+    "Scatola"
+  ],
+  "Bread": [
+    "Pane"
+  ],
+  "ButterKnife": [
+    "Coltello da burro"
+  ],
+  "CD": [
+    "CD"
+  ],
+  "Candle": [
+    "Candela"
+  ],
+  "Cart": [
+    "Carrello"
+  ],
+  "CellPhone": [
+    "Cellulare"
+  ],
+  "Chair": [
+    "Sedia"
+  ],
+  "Cloth": [
+    "Tessuto"
+  ],
+  "ClothesDryer": [
+    "Asciugatrice"
+  ],
+  "CoffeeMachine": [
+    "Caffettiera",
+    "Macchinetta del caffe",
+    "Macchina del caffe"
+  ],
+  "CoffeeTable": [
+    "Tavolino"
+  ],
+  "CounterTop": [
+    "Piano di lavoro"
+  ],
+  "CreditCard": [
+    "Carta di credito"
+  ],
+  "Cup": [
+    "Tazza"
+  ],
+  "Desk": [
+    "Scrivania"
+  ],
+  "DeskLamp": [
+    "Lampada da scrivania"
+  ],
+  "Desktop": [
+    "Desktop"
+  ],
+  "DiningTable": [
+    "Tavolo"
+  ],
+  "DishSponge": [
+    "Spugna per piatti"
+  ],
+  "DogBed": [
+    "Cuccia per cani"
+  ],
+  "Doorframe": [
+    "Telaio della porta"
+  ],
+  "Doorway": [
+    "Ingresso"
+  ],
+  "Dresser": [
+    "Cassettiera"
+  ],
+  "Dumbbell": [
+    "Manubrio"
+  ],
+  "Egg": [
+    "Uovo"
+  ],
+  "Faucet": [
+    "Rubinetto"
+  ],
+  "FloorLamp": [
+    "Lampada da terra"
+  ],
+  "Footstool": [
+    "Sgabello"
+  ],
+  "Fork": [
+    "Forchetta"
+  ],
+  "Fridge": [
+    "Frigorifero"
+  ],
+  "GarbageBag": [
+    "Sacchetto della spazzatura"
+  ],
+  "GarbageCan": [
+    "Bidone della spazzatura",
+    "Bidone",
+    "Secchio",
+    "Secchio della spazzatura"
+  ],
+  "HandTowel": [
+    "Asciugamano per le mani",
+    "Asciugamano"
+  ],
+  "HandTowelHolder": [
+    "Porta asciugamano"
+  ],
+  "HousePlant": [
+    "Pianta da interno"
+  ],
+  "Kettle": [
+    "Bollitore"
+  ],
+  "KeyChain": [
+    "Portachiavi"
+  ],
+  "Knife": [
+    "Coltello"
+  ],
+  "Ladle": [
+    "Mestolo"
+  ],
+  "Laptop": [
+    "Portatile",
+    "Computer",
+    "Laptop",
+    "Notebook",
+    "PC",
+    "Pc"
+  ],
+  "LaundryHamper": [
+    "Cesto della biancheria"
+  ],
+  "Lettuce": [
+    "Lattuga"
+  ],
+  "LightSwitch": [
+    "Luce",
+    "Interruttore"
+  ],
+  "Microwave": [
+    "Microonde"
+  ],
+  "Mug": [
+    "Tazzone"
+  ],
+  "Newspaper": [
+    "Giornale"
+  ],
+  "Ottoman": [
+    "Pouf"
+  ],
+  "Painting": [
+    "Quadro"
+  ],
+  "Pan": [
+    "Padella"
+  ],
+  "PaperTowelRoll": [
+    "Rotolo di carta assorbente"
+  ],
+  "Pen": [
+    "Penna"
+  ],
+  "Pencil": [
+    "Matita"
+  ],
+  "PepperShaker": [
+    "Macinapepe"
+  ],
+  "Pillow": [
+    "Cuscino"
+  ],
+  "Plate": [
+    "Piatto"
+  ],
+  "Plunger": [
+    "Sturalavandini"
+  ],
+  "Pot": [
+    "Pentola"
+  ],
+  "Potato": [
+    "Patata"
+  ],
+  "RemoteControl": [
+    "Telecomando"
+  ],
+  "RoomDecor": [
+    "Decorazione della stanza"
+  ],
+  "Safe": [
+    "Cassaforte"
+  ],
+  "SaltShaker": [
+    "Saliera"
+  ],
+  "ScrubBrush": [
+    "Spazzola per strofinare"
+  ],
+  "ShelvingUnit": [
+    "Scaffalatura"
+  ],
+  "ShowerCurtain": [
+    "Tenda da doccia"
+  ],
+  "ShowerHead": [
+    "Soffione della doccia",
+    "Doccia"
+  ],
+  "SideTable": [
+    "Tavolino laterale"
+  ],
+  "Sink": [
+    "Lavello",
+    "Lavandino"
+  ],
+  "SoapBar": [
+    "Saponetta"
+  ],
+  "SoapBottle": [
+    "Sapone",
+    "Dispenser di sapone"
+  ],
+  "Sofa": [
+    "Sofa",
+    "Divano"
+  ],
+  "Spatula": [
+    "Spatola"
+  ],
+  "Spoon": [
+    "Cucchiaino",
+    "Cucchiaio"
+  ],
+  "SprayBottle": [
+    "Spruzzino"
+  ],
+  "Statue": [
+    "Statua"
+  ],
+  "Stool": [
+    "Sgabello"
+  ],
+  "TVStand": [
+    "Mobile per TV"
+  ],
+  "TableTopDecor": [
+    "Decorazione da tavolo"
+  ],
+  "TeddyBear": [
+    "Orsacchiotto"
+  ],
+  "Television": [
+    "Televisione",
+    "Televisore"
+  ],
+  "TennisRacket": [
+    "Racchetta da tennis"
+  ],
+  "TissueBox": [
+    "Porta fazzoletti"
+  ],
+  "Toaster": [
+    "Tostapane"
+  ],
+  "Toilet": [
+    "Toilette"
+  ],
+  "ToiletPaper": [
+    "Carta igienica"
+  ],
+  "ToiletPaperHanger": [
+    "Porta rotolo carta igienica"
+  ],
+  "Tomato": [
+    "Pomodoro"
+  ],
+  "Towel": [
+    "Asciugamano"
+  ],
+  "TowelHolder": [
+    "Portasciugamani"
+  ],
+  "VacuumCleaner": [
+    "Aspirapolvere"
+  ],
+  "Vase": [
+    "Vaso"
+  ],
+  "WashingMachine": [
+    "Lavatrice"
+  ],
+  "Watch": [
+    "Orologio"
+  ],
+  "WateringCan": [
+    "Annaffiatoio"
+  ],
+  "Window": [
+    "Finestra"
+  ],
+  "WineBottle": [
+    "Vino",
+    "Bottiglia di vino"
+  ]
+}

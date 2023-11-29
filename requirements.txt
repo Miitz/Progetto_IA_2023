@@ -1,0 +1,17 @@
+matplotlib
+pandas
+numpy
+networkx
+attrs
+shapely
+ai2thor
+trimesh
+python-sat
+python-fcl
+canonicaljson
+natsort
+pillow
+moviepy
+prior
+scipy
+python-dotenv
