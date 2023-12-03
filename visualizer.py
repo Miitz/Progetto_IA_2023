@@ -50,7 +50,7 @@ def _setup_camera(controller: Controller, x, z, rotation, path, cam_index, house
     return cam_index
 
 
-def _add_cameras_2(metadata, controller: Controller, path: str, house_data, cam_index: int):
+def _add_cameras(metadata, controller: Controller, path: str, house_data, cam_index: int):
     consecutive_tuples = [({'x': metadata["floorPolygon"][i]['x'], 'z': metadata["floorPolygon"][i]['z']},
                            {'x': metadata["floorPolygon"][i + 1]['x'], 'z': metadata["floorPolygon"][i + 1]['z']})
                           for i in range(len(metadata["floorPolygon"]) - 1)]
@@ -86,64 +86,6 @@ def _add_cameras_2(metadata, controller: Controller, path: str, house_data, cam_
                     cam_index = _setup_camera(controller, _find_mid_point(x0, x1), z0, 0, path, cam_index, house_data)
 
 
-def _add_cameras(metadata, controller: Controller, path: str, house_data):
-    max_x, max_z = 0.0, 0.0
-    print(metadata["floorPolygon"])
-    for coord in metadata["floorPolygon"]:
-        if max_x < coord['x']:
-            max_x = coord['x']
-        if max_z < coord['z']:
-            max_z = coord['z']
-
-    cam_index = 0
-    for coord in metadata["floorPolygon"]:
-        if coord['x'] == coord['z'] and coord['x'] == 0.0:
-            camera = controller.step(
-                action="AddThirdPartyCamera",
-                position=dict(x=coord['x'], y=3, z=coord['z']),
-                rotation=dict(x=30, y=45, z=0),
-                fieldOfView=60,
-                raise_for_failure=True,
-            )
-            Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
-                path + f"/{house_data['id']}_camera_{cam_index}.png")
-            cam_index += 1
-        if coord['x'] == coord['z'] and coord['x'] != 0.0:
-            camera = controller.step(
-                action="AddThirdPartyCamera",
-                position=dict(x=coord['x'], y=3, z=coord['z']),
-                rotation=dict(x=30, y=225, z=0),
-                fieldOfView=60,
-                raise_for_failure=True,
-            )
-            Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
-                path + f"/{house_data['id']}_camera_{cam_index}.png")
-            cam_index += 1
-        if coord['x'] != coord['z'] and coord['x'] == 0.0 and coord['z'] == max_z:
-            camera = controller.step(
-                action="AddThirdPartyCamera",
-                position=dict(x=coord['x'], y=3, z=coord['z']),
-                rotation=dict(x=30, y=135, z=0),
-                fieldOfView=60,
-                raise_for_failure=True,
-            )
-            Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
-                path + f"/{house_data['id']}_camera_{cam_index}.png")
-            cam_index += 1
-
-        if coord['x'] != coord['z'] and coord['x'] == max_x and coord['z'] == 0.0:
-            camera = controller.step(
-                action="AddThirdPartyCamera",
-                position=dict(x=coord['x'], y=3, z=coord['z']),
-                rotation=dict(x=30, y=315, z=0),
-                fieldOfView=60,
-                raise_for_failure=True,
-            )
-            Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
-                path + f"/{house_data['id']}_camera_{cam_index}.png")
-            cam_index += 1
-
-
 def visualize(house_data):
     if not os.path.exists(f"dataset/{house_data['id']}/images"):
         os.mkdir(f"dataset/{house_data['id']}/images")
@@ -175,7 +117,7 @@ def visualize(house_data):
     cam_index = 0
 
     for room in house_data["rooms"]:
-        _add_cameras_2(room, controller, f"dataset/{house_data['id']}/images", house_data, cam_index)
+        _add_cameras(room, controller, f"dataset/{house_data['id']}/images", house_data, cam_index)
 
     _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images")
 
