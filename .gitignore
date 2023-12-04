@@ -212,6 +212,7 @@ cmake-build-*/
 
 # IntelliJ
 out/
+.idea/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -240,3 +241,5 @@ fabric.properties
 # Cartelle personali
 
 dataset
+
+object_list.txt

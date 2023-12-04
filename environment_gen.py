@@ -25,6 +25,10 @@ def _get_object_in_receptacles():
     return _load_json_from_database("procthor_v2/databases/receptacles.json")
 
 
+def _get_object_from_database():
+    return _load_json_from_database("procthor_v2/databases/asset-database.json")
+
+
 def _check_distance(a: dict, b: dict, distance: int, chiave: str):
     if np.abs(a['position']['x'] - b['position']['x']) > distance or np.abs(
             a['position']['y'] - b['position']['y']) > distance:
@@ -39,6 +43,22 @@ def _random_with_N_digits(n):
     range_end = (10 ** n) - 1
     return random.randint(range_start, range_end)
 
+
+def _add_huric_id(dizionario, data):
+    objs = dizionario['objects']
+    for elem in data['objects']:
+        if elem["assetType"] in list(objs.keys()):
+            elem["huric_id"] = objs[elem["assetType"]]["atom"]
+        else:
+            elem["huric_id"] = elem["assetType"] + "_" + str(_random_with_N_digits(13))
+
+        if "children" in elem.keys():
+            for child in elem['children']:
+                # child_obj = objs[child]
+                if child["assetType"] in list(objs.keys()):
+                    child["huric_id"] = objs[child["assetType"]]["atom"]
+                else:
+                    child["huric_id"] = child["assetType"] + "_" + str(_random_with_N_digits(13))
 
 def _rooms_generator(dizionario: dict):
     leafRoom_list = []
@@ -64,13 +84,12 @@ def environment_generator(dizionario: dict):
 
     room_obj = {}
     for k, v in dizionario['objects'].items():
-        # print(f"{k}->{v}")
         if k in _get_object_in_receptacles():
             room_obj[k] = {'position': v["position"], 'contain': [other_v for other_v in dizionario['objects'].keys()
                                                                   if dizionario['objects'][other_v]["position"] == v[
                                                                       "position"] and other_v != k]}
-
-    print(room_obj)
+        elif k in _get_object_from_database():
+            room_obj[k] = {'position': v["position"], 'contain': []}
 
     house_generator = HouseGenerator(
         split="train", seed=random.randrange(2 ** 32 - 1), room_spec=house_project,
@@ -78,15 +97,11 @@ def environment_generator(dizionario: dict):
     )
     house, _ = house_generator.sample()
     house.validate(house_generator.controller)
+
     huric_id = {"id": dizionario['id']}
     house.data.update(huric_id)
 
-    objs = dizionario['objects']
-    for elem in house.data['objects']:
-        if elem in list(objs.keys()):
-            elem["huric_id"] = objs["atom"]
-        else:
-            elem["huric_id"] = elem["assetId"] + "_" + str(_random_with_N_digits(13))
+    _add_huric_id(dizionario, house.data)
 
     if not os.path.exists("dataset"):
         os.mkdir("dataset")
@@ -95,6 +110,8 @@ def environment_generator(dizionario: dict):
     if not os.path.exists(f"dataset/{dizionario['id']}"):
         os.mkdir(f"dataset/{dizionario['id']}")
     _dict_to_json(f"dataset/{dizionario['id']}/gen_{dizionario['id']}.json", house.data)
+
+    # _add_huric_id(house.data)
     # nome_file_json = f"{uuid.uuid4()}.json"
     # dict_to_json(f"{nome_file_json}", house.data)
     # name_img = f"room_seed_{house_generator.seed}.png"

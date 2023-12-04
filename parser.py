@@ -87,7 +87,7 @@ def xml_parser(file_path: str) -> dict:
             entity_id = entity_element.get('atom')
             if _find_key(traduttoreStanze, entity_type)[0] and dizionario['rooms'][_find_key(traduttoreStanze, entity_type)[1]] == 0:
                 dizionario['rooms'][_find_key(traduttoreStanze, entity_type)[1]] += 1
-            if entity_type not in ["Madre", "Luce", "Fuori", "Mucchio"]:
+            if entity_type not in ["Madre", "Fuori", "Mucchio"]:
                 for k, v in traduttoreOggetti.items():
                     if entity_type in v:
                         entity_type = k
@@ -112,5 +112,4 @@ def xml_parser(file_path: str) -> dict:
                         'z': float(coordinate_elem.get('z'))
                     }
                 dizionario['objects'][entity_type] = obj
-    print(dizionario)
     return dizionario

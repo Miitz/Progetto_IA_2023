@@ -820,6 +820,7 @@ def add_paintings(
                 Object(
                     id=f"{room_id}|{len(rooms[room_id].assets) + painting_i + tvs_per_room[room_id]}",
                     assetId=painting["assetId"].iloc[0],
+                    assetType="Painting",
                     position=Vector3(
                         x=placement["centerX"],
                         y=center_y_position,
@@ -989,6 +990,7 @@ def add_televisions(
             Object(
                 id=f"{room_id}|{len(rooms[room_id].assets)}",
                 assetId=asset["assetId"].iloc[0],
+                assetType="Television",
                 position=Vector3(
                     x=placement["centerX"],
                     y=center_y_position,

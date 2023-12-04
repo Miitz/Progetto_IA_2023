@@ -212,7 +212,7 @@ class AssetGroup:
                 id=f"{self.room_id}|{self.object_n}|{i}",
                 position=obj["position"],
                 rotation=Vector3(x=0, y=obj["rotation"], z=0),
-                # assetType=obj["assetType"],
+                assetType=obj["assetType"],
                 assetId=obj["assetId"],
                 kinematic=bool(
                     self.pt_db.PLACEMENT_ANNOTATIONS.loc[
@@ -693,6 +693,7 @@ class ProceduralRoom:
                 objects.append(
                     {
                         "assetId": obj["assetId"],
+                        "assetType": obj["assetType"],
                         # NOTE: adds the base rotation to the object's rotation
                         "rotation": (obj["rotation"] + rotation) % 360,
                         "position": Vector3(x=x, y=obj["position"]["y"], z=z),

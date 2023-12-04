@@ -84,6 +84,7 @@ def _add_cameras(metadata, controller: Controller, path: str, house_data, cam_in
                     cam_index = _setup_camera(controller, x0 / 2, z0, 0, path, cam_index, house_data)
                 else:
                     cam_index = _setup_camera(controller, _find_mid_point(x0, x1), z0, 0, path, cam_index, house_data)
+    return cam_index
 
 
 def visualize(house_data):
@@ -117,7 +118,7 @@ def visualize(house_data):
     cam_index = 0
 
     for room in house_data["rooms"]:
-        _add_cameras(room, controller, f"dataset/{house_data['id']}/images", house_data, cam_index)
+        cam_index = _add_cameras(room, controller, f"dataset/{house_data['id']}/images", house_data, cam_index)
 
     _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images")
 

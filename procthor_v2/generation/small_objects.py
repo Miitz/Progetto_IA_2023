@@ -24,6 +24,8 @@ PARENT_BIAS = defaultdict(
 )
 """The sampling bias for how often an object is placed in a receptacle."""
 
+NO_RECEPT = list["ArmChair", "Chair"]
+
 CHILD_BIAS = defaultdict(
     lambda: 0,
     {
@@ -33,7 +35,7 @@ CHILD_BIAS = defaultdict(
         "Pot": 0.1,
         "Pan": 0.1,
         "Bowl": 0.05,
-        "BaseballBat": 0.1,
+        "BaseballBat": 0.1
     }
 )
 """The sampling bias for how often an individual object is sampled."""
@@ -63,6 +65,229 @@ OBJECTS_TO_DROP = {"BaseballBat": {"p": 0.97}}
 
 Helps avoid the baseball bat from always standing upright.
 """
+
+
+def _define_spawnable_object(spawnable_objects, receptacle, room_type, pt_db):
+    objects_in_receptacle = pt_db.OBJECTS_IN_RECEPTACLES[
+        receptacle["objectType"]
+    ]
+    for object_type, data in objects_in_receptacle.items():
+        room_weight = pt_db.PLACEMENT_ANNOTATIONS.loc[object_type][
+            f"in{room_type}s"
+        ]
+        if room_weight == 0:
+            continue
+        spawnable_objects.append(
+            {
+                "receptacleId": receptacle["objectId"],
+                "receptacleType": receptacle["objectType"],
+                "childObjectType": object_type,
+                "childRoomWeight": room_weight,
+                "pSpawn": data["p"],
+            }
+        )
+    return spawnable_objects
+
+
+def _filter_hrc_spawnable_objects(new_room_object, spawnable_objects):
+    new_spawnable_objects = []
+
+    for k, v in new_room_object.items():
+        if len(v['contain']) > 0:
+            for o in v['contain']:
+                print(k)
+                print(o)
+                new_spawnable_objects.append(
+                    list(filter(lambda x: 'childObjectType' in x and x['childObjectType'] == o and x['receptacleType'] == k, spawnable_objects)))
+
+    for o in list(new_room_object.keys()):
+        CHILD_BIAS.update({o: 1})
+        new_spawnable_objects.append(
+            list(filter(lambda x: 'childObjectType' in x and x['childObjectType'] == o, spawnable_objects)))
+
+    new_spawnable_objects = [item for sublist in new_spawnable_objects for item in sublist]
+    return new_spawnable_objects
+
+
+def _filter_hrc_spawnable_group(objects, house_bias):
+    filtered_spawnable_groups = [
+        group
+        for group in objects
+        if random.random()
+           <= (
+                   group["pSpawn"]
+                   + PARENT_BIAS[group["receptacleType"]]
+                   + CHILD_BIAS[group["childObjectType"]]
+                   + house_bias
+           )
+    ]
+    selected_dicts = {}
+    for item in filtered_spawnable_groups:
+        object_type = item['childObjectType']
+        if object_type not in selected_dicts:
+            selected_dicts[object_type] = random.choice(
+                [d for d in filtered_spawnable_groups if d['childObjectType'] == object_type
+                 and (d['receptacleType'] != "ArmChair" and d['receptacleType'] != "Chair")])
+
+    filtered_spawnable_groups = list(selected_dicts.values())
+    return filtered_spawnable_groups
+
+
+def _add_asset_to_scene(filtered_spawnable_groups,
+                        objects_types_placed_in_room,
+                        max_object_types_per_room,
+                        room_id,
+                        object_types_in_rooms,
+                        pt_db,
+                        split,
+                        num_placed_object_instances,
+                        controller,
+                        objects_in_house):
+    for group in filtered_spawnable_groups:
+        if len(objects_types_placed_in_room) >= max_object_types_per_room:
+            break
+
+        # NOTE: Supports things like 3 plates on a surface.
+        num_of_type = 1
+        # NOTE: intentionally has no bias on > 1 samples.
+        while random.random() <= group["pSpawn"]:
+            num_of_type += 1
+            if num_of_type >= MAX_OF_TYPE_ON_RECEPTACLE:
+                break
+
+        for _ in range(num_of_type):
+            # NOTE: Check if there can be multiple of the same type in the room.
+            if (
+                    group["childObjectType"] in object_types_in_rooms[room_id]
+                    and not pt_db.PLACEMENT_ANNOTATIONS.loc[group["childObjectType"]][
+                "multiplePerRoom"
+            ]
+            ):
+                break
+
+            asset_candidates = pt_db.ASSETS_DF[
+                (pt_db.ASSETS_DF["objectType"] == group["childObjectType"])
+                & pt_db.ASSETS_DF["split"].isin([split, None])
+                ]
+
+            if group["childObjectType"] == "HousePlant":
+                # NOTE: House plants are a weird exception where there are massive
+                # house plants meant to be placed on the floor, and smaller
+                # house plants that can be placed on receptacles. This filters
+                # to only place smaller house plants on receptacles.
+                asset_candidates = asset_candidates[
+                    asset_candidates["ySize"] < HOUSE_PLANT_MAX_HEIGHT
+                    ]
+
+            # NOTE: Some objects have multiple sim object receptacles within it,
+            # so we need to specify all of them as possible receptacle object ids.
+            event = controller.step(action="ResetObjectFilter")
+            receptacle_object_ids = [
+                obj["objectId"]
+                for obj in event.metadata["objects"]
+                if obj["objectId"].startswith(group["receptacleId"])
+            ]
+
+            chosen_asset_id = asset_candidates.sample()["assetId"].iloc[0]
+            chosen_asset_type = asset_candidates.sample()["objectType"].iloc[0]
+
+            generated_object_id = f"small|{room_id}|{num_placed_object_instances}"
+
+            # NOTE: spawn below the floor so it doesn't tip over any other objects.
+            event = controller.step(
+                action="SpawnAsset",
+                assetId=chosen_asset_id,
+                generatedId=generated_object_id,
+                position=Vector3(x=0, y=FLOOR_Y - 20, z=0),
+                renderImage=False,
+            )
+            assert (
+                event
+            ), f"SpawnAsset failed for {chosen_asset_id} with {event.metadata['actionReturn']}!"
+            controller.step(
+                action="SetObjectFilter", objectIds=[generated_object_id]
+            )
+
+            obj_type = pt_db.ASSET_ID_DATABASE[chosen_asset_id]["objectType"]
+            openness = None
+            if (
+                    obj_type in OPENNESS_RANDOMIZATIONS
+                    and "CanOpen"
+                    in pt_db.ASSET_ID_DATABASE[chosen_asset_id]["secondaryProperties"]
+            ):
+                openness = sample_openness(obj_type)
+                controller.step(
+                    action="OpenObject",
+                    objectId=generated_object_id,
+                    openness=openness,
+                    forceAction=True,
+                    raise_for_failure=True,
+                    renderImage=False,
+                )
+            event = controller.step(
+                action="InitialRandomSpawn",
+                randomSeed=random.randint(0, 1_000_000_000),
+                objectIds=[generated_object_id],
+                receptacleObjectIds=receptacle_object_ids,
+                forceVisible=False,
+                allowFloor=False,
+                renderImage=False,
+                allowMoveable=True,
+            )
+            obj = next(
+                obj
+                for obj in event.metadata["objects"]
+                if obj["objectId"] == generated_object_id
+            )
+            center_position = obj["axisAlignedBoundingBox"]["center"].copy()
+
+            # NOTE: Sometimes InitialRandomSpawn succeeds when it should
+            # be failing. In these cases, the object will appear below
+            # the floor.
+            if event and center_position["y"] > FLOOR_Y:
+                if obj["breakable"]:
+                    # NOTE: often avoids objects shattering upon initialization.
+                    center_position["y"] += 0.05
+
+                states = {}
+                if openness is not None:
+                    states["openness"] = openness
+
+                # NOTE: "___" is when there is a child SimObjPhysics of another
+                # SimObjPhysics object (e.g., drawers on dressers).
+                house_data_receptacle = group["receptacleId"]
+                if "___" in group["receptacleId"]:
+                    house_data_receptacle = group["receptacleId"][
+                                            : group["receptacleId"].find("___")
+                                            ]
+                if "children" not in objects_in_house[house_data_receptacle]:
+                    objects_in_house[house_data_receptacle]["children"] = []
+
+                objects_in_house[house_data_receptacle]["children"].append(
+                    Object(
+                        id=generated_object_id,
+                        assetId=chosen_asset_id,
+                        assetType=chosen_asset_type,
+                        rotation=obj["rotation"],
+                        position=center_position,
+                        kinematic=bool(
+                            pt_db.PLACEMENT_ANNOTATIONS.loc[
+                                group["childObjectType"]
+                            ]["isKinematic"]
+                        ),
+                        **states,
+                    )
+                )
+
+                num_placed_object_instances += 1
+                objects_types_placed_in_room.add(obj_type)
+                object_types_in_rooms[room_id].add(group["childObjectType"])
+            else:
+                controller.step(
+                    action="DisableObject",
+                    objectId=generated_object_id,
+                    renderImage=False,
+                )
 
 
 def default_add_small_objects(
@@ -116,368 +341,76 @@ def default_add_small_objects(
 
     # NOTE: Place the objects
     num_placed_object_instances = 0
-    new_room_obj = {k: v['contain'] for k, v in room_object.items()}
-    room_object = copy.deepcopy(new_room_obj)
+
+    # new_room_object = {k: v['contain'] for k, v in room_object.items()}
+    new_room_object = copy.deepcopy(room_object)
     for room_id, room in rooms.items():
         if room_id not in receptacles_per_room:
             continue
         receptacles_in_room = receptacles_per_room[room_id]
-        room_type = room.room_type
         spawnable_objects = []
-        for receptacle in receptacles_in_room:
-            objects_in_receptacle = pt_db.OBJECTS_IN_RECEPTACLES[
-                receptacle["objectType"]
-            ]
-            try:
-                objects_for_receptacle = room_object[receptacle["objectType"]]
-                dizionario = {elem: objects_in_receptacle[elem] for elem in objects_for_receptacle}
-                for object_type, data in dizionario.items():
-                    room_weight = pt_db.PLACEMENT_ANNOTATIONS.loc[object_type][
-                        f"in{room_type}s"
-                    ]
-                    if room_weight == 0:
-                        continue
-                    spawnable_objects.append(
-                        {
-                            "receptacleId": receptacle["objectId"],
-                            "receptacleType": receptacle["objectType"],
-                            "childObjectType": object_type,
-                            "childRoomWeight": room_weight,
-                            "pSpawn": data["p"],
-                        }
-                    )
-            except:
-                continue
 
-        filtered_spawnable_groups = spawnable_objects
+        for receptacle in receptacles_in_room:
+            spawnable_objects = _define_spawnable_object(spawnable_objects, receptacle, room.room_type, pt_db)
+
+        filtered_hrc_spawnable_objects = _filter_hrc_spawnable_objects(new_room_object, spawnable_objects)
+
+        filtered_spawnable_groups = _filter_hrc_spawnable_group(filtered_hrc_spawnable_objects, house_bias)
+
         random.shuffle(filtered_spawnable_groups)
         objects_types_placed_in_room = set()
-        for group in filtered_spawnable_groups:
-            if len(objects_types_placed_in_room) >= max_object_types_per_room:
-                break
 
-            # NOTE: Supports things like 3 plates on a surface.
-            num_of_type = 1
-            # NOTE: intentionally has no bias on > 1 samples.
-            while random.random() <= group["pSpawn"]:
-                num_of_type += 1
-                if num_of_type >= MAX_OF_TYPE_ON_RECEPTACLE:
-                    break
+        _add_asset_to_scene(filtered_spawnable_groups,
+                            objects_types_placed_in_room,
+                            max_object_types_per_room,
+                            room_id,
+                            object_types_in_rooms,
+                            pt_db,
+                            split,
+                            num_placed_object_instances,
+                            controller,
+                            objects_in_house)
 
-            for _ in range(num_of_type):
-                # NOTE: Check if there can be multiple of the same type in the room.
-                if (
-                        group["childObjectType"] in object_types_in_rooms[room_id]
-                        and not pt_db.PLACEMENT_ANNOTATIONS.loc[group["childObjectType"]][
-                    "multiplePerRoom"
-                ]
-                ):
-                    break
-
-                asset_candidates = pt_db.ASSETS_DF[
-                    (pt_db.ASSETS_DF["objectType"] == group["childObjectType"])
-                    & pt_db.ASSETS_DF["split"].isin([split, None])
-                    ]
-
-                if group["childObjectType"] == "HousePlant":
-                    # NOTE: House plants are a weird exception where there are massive
-                    # house plants meant to be placed on the floor, and smaller
-                    # house plants that can be placed on receptacles. This filters
-                    # to only place smaller house plants on receptacles.
-                    asset_candidates = asset_candidates[
-                        asset_candidates["ySize"] < HOUSE_PLANT_MAX_HEIGHT
-                        ]
-
-                # NOTE: Some objects have multiple sim object receptacles within it,
-                # so we need to specify all of them as possible receptacle object ids.
-                event = controller.step(action="ResetObjectFilter")
-                receptacle_object_ids = [
-                    obj["objectId"]
-                    for obj in event.metadata["objects"]
-                    if obj["objectId"].startswith(group["receptacleId"])
-                ]
-
-                chosen_asset_id = asset_candidates.sample()["assetId"].iloc[0]
-
-                generated_object_id = f"small|{room_id}|{num_placed_object_instances}"
-
-                # NOTE: spawn below the floor so it doesn't tip over any other objects.
-                event = controller.step(
-                    action="SpawnAsset",
-                    assetId=chosen_asset_id,
-                    generatedId=generated_object_id,
-                    position=Vector3(x=0, y=FLOOR_Y - 20, z=0),
-                    renderImage=False,
-                )
-                assert (
-                    event
-                ), f"SpawnAsset failed for {chosen_asset_id} with {event.metadata['actionReturn']}!"
-                controller.step(
-                    action="SetObjectFilter", objectIds=[generated_object_id]
-                )
-
-                obj_type = pt_db.ASSET_ID_DATABASE[chosen_asset_id]["objectType"]
-                openness = None
-                if (
-                        obj_type in OPENNESS_RANDOMIZATIONS
-                        and "CanOpen"
-                        in pt_db.ASSET_ID_DATABASE[chosen_asset_id]["secondaryProperties"]
-                ):
-                    openness = sample_openness(obj_type)
-                    controller.step(
-                        action="OpenObject",
-                        objectId=generated_object_id,
-                        openness=openness,
-                        forceAction=True,
-                        raise_for_failure=True,
-                        renderImage=False,
-                    )
-                event = controller.step(
-                    action="InitialRandomSpawn",
-                    randomSeed=random.randint(0, 1_000_000_000),
-                    objectIds=[generated_object_id],
-                    receptacleObjectIds=receptacle_object_ids,
-                    forceVisible=False,
-                    allowFloor=False,
-                    renderImage=False,
-                    allowMoveable=True,
-                )
-                obj = next(
-                    obj
-                    for obj in event.metadata["objects"]
-                    if obj["objectId"] == generated_object_id
-                )
-                center_position = obj["axisAlignedBoundingBox"]["center"].copy()
-
-                # NOTE: Sometimes InitialRandomSpawn succeeds when it should
-                # be failing. In these cases, the object will appear below
-                # the floor.
-                if event and center_position["y"] > FLOOR_Y:
-                    if obj["breakable"]:
-                        # NOTE: often avoids objects shattering upon initialization.
-                        center_position["y"] += 0.05
-
-                    states = {}
-                    if openness is not None:
-                        states["openness"] = openness
-
-                    # NOTE: "___" is when there is a child SimObjPhysics of another
-                    # SimObjPhysics object (e.g., drawers on dressers).
-                    house_data_receptacle = group["receptacleId"]
-                    if "___" in group["receptacleId"]:
-                        house_data_receptacle = group["receptacleId"][
-                                                : group["receptacleId"].find("___")
-                                                ]
-                    if "children" not in objects_in_house[house_data_receptacle]:
-                        objects_in_house[house_data_receptacle]["children"] = []
-
-                    objects_in_house[house_data_receptacle]["children"].append(
-                        Object(
-                            id=generated_object_id,
-                            assetId=chosen_asset_id,
-                            rotation=obj["rotation"],
-                            position=center_position,
-                            kinematic=bool(
-                                pt_db.PLACEMENT_ANNOTATIONS.loc[
-                                    group["childObjectType"]
-                                ]["isKinematic"]
-                            ),
-                            **states,
-                        )
-                    )
-
-                    num_placed_object_instances += 1
-                    objects_types_placed_in_room.add(obj_type)
-                    object_types_in_rooms[room_id].add(group["childObjectType"])
-                else:
-                    controller.step(
-                        action="DisableObject",
-                        objectId=generated_object_id,
-                        renderImage=False,
-                    )
+        for o in room_object.keys():
+            if any(o in d.values() for d in filtered_spawnable_groups):
+                new_room_object.pop(o)
 
     for room_id, room in rooms.items():
         if room_id not in receptacles_per_room:
             continue
         receptacles_in_room = receptacles_per_room[room_id]
-        room_type = room.room_type
         spawnable_objects = []
+
         for receptacle in receptacles_in_room:
-            objects_in_receptacle = pt_db.OBJECTS_IN_RECEPTACLES[
-                receptacle["objectType"]
-            ]
-            for object_type, data in objects_in_receptacle.items():
-                room_weight = pt_db.PLACEMENT_ANNOTATIONS.loc[object_type][
-                    f"in{room_type}s"
-                ]
-                if room_weight == 0:
-                    continue
-                spawnable_objects.append(
-                    {
-                        "receptacleId": receptacle["objectId"],
-                        "receptacleType": receptacle["objectType"],
-                        "childObjectType": object_type,
-                        "childRoomWeight": room_weight,
-                        "pSpawn": data["p"],
-                    }
-                )
+            spawnable_objects = _define_spawnable_object(spawnable_objects, receptacle, room.room_type, pt_db)
+
+        spawnable_objects = [d for d in spawnable_objects if d['childObjectType'] not in room_object.keys()]
 
         filtered_spawnable_groups = [
             group
             for group in spawnable_objects
             if random.random()
-            <= (
-                group["pSpawn"]
-                + PARENT_BIAS[group["receptacleType"]]
-                + CHILD_BIAS[group["childObjectType"]]
-                + house_bias
-            )
+               <= (
+                       group["pSpawn"]
+                       + PARENT_BIAS[group["receptacleType"]]
+                       + CHILD_BIAS[group["childObjectType"]]
+                       + house_bias
+               )
         ]
+
         random.shuffle(filtered_spawnable_groups)
         objects_types_placed_in_room = set()
-        for group in filtered_spawnable_groups:
-            if len(objects_types_placed_in_room) >= max_object_types_per_room:
-                break
 
-            # NOTE: Supports things like 3 plates on a surface.
-            num_of_type = 1
-            # NOTE: intentionally has no bias on > 1 samples.
-            while random.random() <= group["pSpawn"]:
-                num_of_type += 1
-                if num_of_type >= MAX_OF_TYPE_ON_RECEPTACLE:
-                    break
-
-            for _ in range(num_of_type):
-                # NOTE: Check if there can be multiple of the same type in the room.
-                if (
-                    group["childObjectType"] in object_types_in_rooms[room_id]
-                    and not pt_db.PLACEMENT_ANNOTATIONS.loc[group["childObjectType"]][
-                        "multiplePerRoom"
-                    ]
-                ):
-                    break
-
-                asset_candidates = pt_db.ASSETS_DF[
-                    (pt_db.ASSETS_DF["objectType"] == group["childObjectType"])
-                    & pt_db.ASSETS_DF["split"].isin([split, None])
-                ]
-
-                if group["childObjectType"] == "HousePlant":
-                    # NOTE: House plants are a weird exception where there are massive
-                    # house plants meant to be placed on the floor, and smaller
-                    # house plants that can be placed on receptacles. This filters
-                    # to only place smaller house plants on receptacles.
-                    asset_candidates = asset_candidates[
-                        asset_candidates["ySize"] < HOUSE_PLANT_MAX_HEIGHT
-                    ]
-
-                # NOTE: Some objects have multiple sim object receptacles within it,
-                # so we need to specify all of them as possible receptacle object ids.
-                event = controller.step(action="ResetObjectFilter")
-                receptacle_object_ids = [
-                    obj["objectId"]
-                    for obj in event.metadata["objects"]
-                    if obj["objectId"].startswith(group["receptacleId"])
-                ]
-
-                chosen_asset_id = asset_candidates.sample()["assetId"].iloc[0]
-
-                generated_object_id = f"small|{room_id}|{num_placed_object_instances}"
-
-                # NOTE: spawn below the floor so it doesn't tip over any other objects.
-                event = controller.step(
-                    action="SpawnAsset",
-                    assetId=chosen_asset_id,
-                    generatedId=generated_object_id,
-                    position=Vector3(x=0, y=FLOOR_Y - 20, z=0),
-                    renderImage=False,
-                )
-                assert (
-                    event
-                ), f"SpawnAsset failed for {chosen_asset_id} with {event.metadata['actionReturn']}!"
-                controller.step(
-                    action="SetObjectFilter", objectIds=[generated_object_id]
-                )
-
-                obj_type = pt_db.ASSET_ID_DATABASE[chosen_asset_id]["objectType"]
-                openness = None
-                if (
-                    obj_type in OPENNESS_RANDOMIZATIONS
-                    and "CanOpen"
-                    in pt_db.ASSET_ID_DATABASE[chosen_asset_id]["secondaryProperties"]
-                ):
-                    openness = sample_openness(obj_type)
-                    controller.step(
-                        action="OpenObject",
-                        objectId=generated_object_id,
-                        openness=openness,
-                        forceAction=True,
-                        raise_for_failure=True,
-                        renderImage=False,
-                    )
-                event = controller.step(
-                    action="InitialRandomSpawn",
-                    randomSeed=random.randint(0, 1_000_000_000),
-                    objectIds=[generated_object_id],
-                    receptacleObjectIds=receptacle_object_ids,
-                    forceVisible=False,
-                    allowFloor=False,
-                    renderImage=False,
-                    allowMoveable=True,
-                )
-                obj = next(
-                    obj
-                    for obj in event.metadata["objects"]
-                    if obj["objectId"] == generated_object_id
-                )
-                center_position = obj["axisAlignedBoundingBox"]["center"].copy()
-
-                # NOTE: Sometimes InitialRandomSpawn succeeds when it should
-                # be failing. In these cases, the object will appear below
-                # the floor.
-                if event and center_position["y"] > FLOOR_Y:
-                    if obj["breakable"]:
-                        # NOTE: often avoids objects shattering upon initialization.
-                        center_position["y"] += 0.05
-
-                    states = {}
-                    if openness is not None:
-                        states["openness"] = openness
-
-                    # NOTE: "___" is when there is a child SimObjPhysics of another
-                    # SimObjPhysics object (e.g., drawers on dressers).
-                    house_data_receptacle = group["receptacleId"]
-                    if "___" in group["receptacleId"]:
-                        house_data_receptacle = group["receptacleId"][
-                            : group["receptacleId"].find("___")
-                        ]
-                    if "children" not in objects_in_house[house_data_receptacle]:
-                        objects_in_house[house_data_receptacle]["children"] = []
-
-                    objects_in_house[house_data_receptacle]["children"].append(
-                        Object(
-                            id=generated_object_id,
-                            assetId=chosen_asset_id,
-                            rotation=obj["rotation"],
-                            position=center_position,
-                            kinematic=bool(
-                                pt_db.PLACEMENT_ANNOTATIONS.loc[
-                                    group["childObjectType"]
-                                ]["isKinematic"]
-                            ),
-                            **states,
-                        )
-                    )
-
-                    num_placed_object_instances += 1
-                    objects_types_placed_in_room.add(obj_type)
-                    object_types_in_rooms[room_id].add(group["childObjectType"])
-                else:
-                    controller.step(
-                        action="DisableObject",
-                        objectId=generated_object_id,
-                        renderImage=False,
-                    )
+        _add_asset_to_scene(filtered_spawnable_groups,
+                            objects_types_placed_in_room,
+                            max_object_types_per_room,
+                            room_id,
+                            object_types_in_rooms,
+                            pt_db,
+                            split,
+                            num_placed_object_instances,
+                            controller,
+                            objects_in_house)
 
     # NOTE: Drop object from near ceiling so it falls
     def _set_drop_heights(objects: List[Object], obj_types):
