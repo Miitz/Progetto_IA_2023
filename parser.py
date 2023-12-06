@@ -31,7 +31,7 @@ def _check_rooms(dizionario: dict):
     return np.unique(list(dizionario.values())).size == 1
 
 
-def xml_parser(file_path: str) -> dict:
+def xml_parser(file_path: str) -> (dict, str):
     tree = ET.parse(file_path)
     root = tree.getroot()
 
@@ -41,7 +41,7 @@ def xml_parser(file_path: str) -> dict:
     traduttoreOggetti = _load_json("translation/traduttore_oggetti.json")
     dizionario = {'rooms': {"Kitchen": 0, "LivingRoom": 0, "Bedroom": 0, "Bathroom": 0}, 'objects': {}}
     dizionario.update(root.attrib)
-
+    stanza: str = ""
     surface_list = []
     tokens_elements = root.findall('.//tokens')
     for tokens in tokens_elements:
@@ -51,6 +51,7 @@ def xml_parser(file_path: str) -> dict:
                 surface = token.get('surface')
                 if _find_key(traduttoreStanze, surface)[0]:
                     dizionario['rooms'][_find_key(traduttoreStanze, surface)[1]] += 1
+                    stanza = _find_key(traduttoreStanze, surface)[1]
                     valore = _choose_random_room(_find_key(traduttoreStanze, surface)[1], dizionario)
                     dizionario['rooms'][valore] += 1
 
@@ -112,4 +113,4 @@ def xml_parser(file_path: str) -> dict:
                         'z': float(coordinate_elem.get('z'))
                     }
                 dizionario['objects'][entity_type] = obj
-    return dizionario
+    return dizionario, stanza

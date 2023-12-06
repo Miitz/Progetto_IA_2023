@@ -1,8 +1,15 @@
 import copy
 import os.path
 import json
+import shutil
+
 from ai2thor.controller import Controller
 from PIL import Image
+
+
+def _dict_to_json(string, _dict):
+    with open(f"{string}", "w") as convert_file:
+        convert_file.write(json.dumps(_dict))
 
 
 def _find_mid_point(max_val, min_val):
@@ -44,9 +51,17 @@ def _setup_camera(controller: Controller, x, z, rotation, path, cam_index, house
         fieldOfView=60,
         raise_for_failure=True,
     )
+    camera = controller.step(
+        action="UpdateThirdPartyCamera",
+        thirdPartyCameraId=cam_index,
+    )
+    house_data["cameras"].update({f"camera_{cam_index}": []})
+
+    # print(f"camera_{cam_index}\n", camera.third_party_instance_masks[cam_index].instance_colors)
+
     Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
         path + f"/{house_data['id']}_camera_{cam_index}.png")
-    cam_index += 1
+    cam_index = cam_index + 1
     return cam_index
 
 
@@ -84,10 +99,13 @@ def _add_cameras(metadata, controller: Controller, path: str, house_data, cam_in
                     cam_index = _setup_camera(controller, x0 / 2, z0, 0, path, cam_index, house_data)
                 else:
                     cam_index = _setup_camera(controller, _find_mid_point(x0, x1), z0, 0, path, cam_index, house_data)
+
     return cam_index
 
 
 def visualize(house_data):
+    if os.path.exists(f"dataset/{house_data['id']}/images"):
+        shutil.rmtree(f"dataset/{house_data['id']}/images")
     if not os.path.exists(f"dataset/{house_data['id']}/images"):
         os.mkdir(f"dataset/{house_data['id']}/images")
 
@@ -122,6 +140,8 @@ def visualize(house_data):
 
     _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images")
 
+    _dict_to_json(f"dataset/{house_data['id']}/gen_{house_data['id']}.json", house_data)
+
     # TESTING NON CANCELLARE
     # camera = controller.step(
     #     action="AddThirdPartyCamera",
@@ -134,7 +154,7 @@ def visualize(house_data):
 
 
 # TESTING NON CANCELLARE
-
+#
 # with open("dataset/4169/gen_4169.json") as json_file:
 #     data = json.load(json_file)
 #

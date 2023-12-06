@@ -3,8 +3,12 @@ import os.path
 import json
 import random
 import shutil
+import typing
+
 import numpy as np
 from typing import Union
+
+from procthor_v2.generation.agent import generate_starting_pose
 from procthor_v2.utils.types import LeafRoom, MetaRoom
 from procthor_v2.generation import HouseGenerator, RoomSpec, PROCTHOR10K_ROOM_SPEC_SAMPLER
 
@@ -60,6 +64,7 @@ def _add_huric_id(dizionario, data):
                 else:
                     child["huric_id"] = child["assetType"] + "_" + str(_random_with_N_digits(13))
 
+
 def _rooms_generator(dizionario: dict):
     leafRoom_list = []
     id_room = 2
@@ -78,7 +83,7 @@ def _rooms_generator(dizionario: dict):
     return leafRoom_list
 
 
-def environment_generator(dizionario: dict):
+def environment_generator(dizionario: dict, stanza: str):
     spec = [MetaRoom(ratio=1, children=_rooms_generator(dizionario))]
     house_project = RoomSpec(room_spec_id="my_house", sampling_weight=2, spec=spec)
 
@@ -98,10 +103,33 @@ def environment_generator(dizionario: dict):
     house, _ = house_generator.sample()
     house.validate(house_generator.controller)
 
-    huric_id = {"id": dizionario['id']}
-    house.data.update(huric_id)
+    huric_num = {"id": dizionario['id']}
+    house.data.update(huric_num)
+
+    cameras = {"cameras": {}}
+    house.data.update(cameras)
+    """
+       Check se bisogna inserire il robot nella stanza "opposta" a quella
+       descritta nella "sentence" 
+    """
+    if stanza != "":
+        for room in house.data["rooms"]:
+            if room["roomType"] != stanza:
+                num = int(room["id"][-1])
+                pose = {num: house.rooms.get(num)}
+                house.data["metadata"]["agent"] = generate_starting_pose(pose)
+
+    """
+       Aggiunta dell'id per ogni oggetto presente nell' ambiente.
+       Per gli oggetti descritti nel file huric viene mantenuto lo stesso id (atom).
+       Per gli altri oggetti viene generato in maniera randomica mantenendo lo stesso stile "dell'atom".
+    """
 
     _add_huric_id(dizionario, house.data)
+
+    """
+       Check e creazione delle cartelle per il salvataggio delle immagini e del file json.
+    """
 
     if not os.path.exists("dataset"):
         os.mkdir("dataset")
@@ -110,12 +138,6 @@ def environment_generator(dizionario: dict):
     if not os.path.exists(f"dataset/{dizionario['id']}"):
         os.mkdir(f"dataset/{dizionario['id']}")
     _dict_to_json(f"dataset/{dizionario['id']}/gen_{dizionario['id']}.json", house.data)
+    shutil.copyfile(f"huric/it/{dizionario['id']}.hrc", f"dataset/{dizionario['id']}/{dizionario['id']}.hrc")
 
-    # _add_huric_id(house.data)
-    # nome_file_json = f"{uuid.uuid4()}.json"
-    # dict_to_json(f"{nome_file_json}", house.data)
-    # name_img = f"room_seed_{house_generator.seed}.png"
-    # (get_top_down_frame(house_generator.controller, house.data)
-    #  .save(f"/Users/daniilmastrangeli/Desktop/progettoFinaleBasili/immagini/{name_img}"))
-    # return (nome_file_json, name_img)
     return house.data

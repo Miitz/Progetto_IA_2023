@@ -2,6 +2,6 @@ from parser import xml_parser
 from environment_gen import environment_generator
 from visualizer import visualize
 
-# house_data = environment_generator(xml_parser("huric/it/4266.hrc"))
-house_data = environment_generator(xml_parser("huric/it/4169.hrc"))
+data, room = xml_parser("huric/it/4169.hrc")
+house_data = environment_generator(data, room)
 visualize(house_data)
