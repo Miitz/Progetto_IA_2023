@@ -51,13 +51,8 @@ def _setup_camera(controller: Controller, x, z, rotation, path, cam_index, house
         fieldOfView=60,
         raise_for_failure=True,
     )
-    camera = controller.step(
-        action="UpdateThirdPartyCamera",
-        thirdPartyCameraId=cam_index,
-    )
-    house_data["cameras"].update({f"camera_{cam_index}": []})
 
-    # print(f"camera_{cam_index}\n", camera.third_party_instance_masks[cam_index].instance_colors)
+    # house_data["cameras"].update({f"camera_{cam_index}": []})
 
     Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
         path + f"/{house_data['id']}_camera_{cam_index}.png")
@@ -140,9 +135,9 @@ def visualize(house_data):
 
     _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images")
 
-    _dict_to_json(f"dataset/{house_data['id']}/gen_{house_data['id']}.json", house_data)
 
     # TESTING NON CANCELLARE
+    # _dict_to_json(f"dataset/{house_data['id']}/gen_{house_data['id']}.json", house_data)
     # camera = controller.step(
     #     action="AddThirdPartyCamera",
     #     position=dict(x=8.756, y=3, z=((6.567 - 2.189) / 2) + 2.189),
