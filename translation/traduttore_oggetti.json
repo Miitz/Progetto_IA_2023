@@ -3,6 +3,7 @@
     "Sveglia"
   ],
   "AluminumFoil": [
+    "Alluminio",
     "Foglio di alluminio"
   ],
   "Apple": [
@@ -13,9 +14,13 @@
     "Poltrona"
   ],
   "BaseballBat": [
+    "Mazza",
+    "Baseball",
     "Mazza da baseball"
   ],
   "BasketBall": [
+    "Basket",
+    "Pallone",
     "Pallacanestro"
   ],
   "Bed": [
@@ -84,7 +89,7 @@
     "Carta di credito"
   ],
   "Cup": [
-    "Tazza"
+    "Bicchiere"
   ],
   "Desk": [
     "Scrivania"
@@ -99,9 +104,11 @@
     "Tavolo"
   ],
   "DishSponge": [
+    "Spugna",
     "Spugna per piatti"
   ],
   "DogBed": [
+    "Cuccia",
     "Cuccia per cani"
   ],
   "Doorframe": [
@@ -111,6 +118,7 @@
     "Ingresso"
   ],
   "Dresser": [
+    "Cassetto",
     "Cassettiera"
   ],
   "Dumbbell": [
@@ -137,6 +145,7 @@
     "Frigorifero"
   ],
   "GarbageBag": [
+    "Spazzatura",
     "Sacchetto della spazzatura"
   ],
   "GarbageCan": [
@@ -191,6 +200,7 @@
     "Microonde"
   ],
   "Mug": [
+    "Tazza",
     "Tazzone"
   ],
   "Newspaper": [
@@ -309,9 +319,11 @@
     "Televisore"
   ],
   "TennisRacket": [
+    "Racchetta",
     "Racchetta da tennis"
   ],
   "TissueBox": [
+    "Fazzoletti",
     "Porta fazzoletti"
   ],
   "Toaster": [
@@ -333,6 +345,7 @@
     "Asciugamano"
   ],
   "TowelHolder": [
+    "Portasciugamano",
     "Portasciugamani"
   ],
   "VacuumCleaner": [

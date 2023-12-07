@@ -106,8 +106,8 @@ def environment_generator(dizionario: dict, stanza: str):
     huric_num = {"id": dizionario['id']}
     house.data.update(huric_num)
 
-    cameras = {"cameras": {}}
-    house.data.update(cameras)
+    # cameras = {"cameras": {}}
+    # house.data.update(cameras)
     """
        Check se bisogna inserire il robot nella stanza "opposta" a quella
        descritta nella "sentence" 
