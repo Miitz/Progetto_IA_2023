@@ -18,6 +18,51 @@ def _find_mid_point(max_val, min_val):
     return ((max_val - min_val) / 2) + min_val
 
 
+def add_images_to_obj(obj, inverted_dict):
+    """ Aggiunge ai children. """
+    obj_id = obj.get('id')
+    if obj_id and obj_id in inverted_dict:
+        obj['images'] = inverted_dict[obj_id]
+
+    if 'children' in obj:
+        for child in obj['children']:
+            add_images_to_obj(child, inverted_dict)
+
+
+def _add_photo_images(house: dict, dicto: dict):
+    # Creazione di un dizionario invertito
+    inverted_dict = {}
+    for image_name, objects in dicto.items():
+        for obj_id, bbox in objects.items():
+            inverted_dict.setdefault(obj_id, []).append({
+                "image": image_name,
+                "bounding_box": bbox
+            })
+
+    for key in ['doors', 'objects', 'windows']:
+        if key in house:
+            for elem in house[key]:
+                add_images_to_obj(elem, inverted_dict)
+    _dict_to_json(f"dataset/{house['id']}/gen_{house['id']}.json", house)
+
+
+def _add_images(elem):
+    elem['images'] = []
+    if 'children' in elem:
+        for child in elem['children']:
+            _add_images(child)
+
+
+def _add_images_key(house):
+    exclude_keys = ["rooms", "walls", "proceduralParameters", "metadata", "id"]
+
+    for key, value in house.items():
+        if key not in exclude_keys and isinstance(value, list):
+            for elem in value:
+                _add_images(elem)
+    _dict_to_json(f"dataset/{house['id']}/gen_{house['id']}.json", house)
+
+
 def _get_top_down_frame(data, controller: Controller, path: str, name: str):
     if not isinstance(controller, Controller):
         raise TypeError("You must pass a controller as an argument")
@@ -141,6 +186,7 @@ def show_reachable_position(controller, data):
     return good_coord
 
 def get_bounding_box(controller):
+    dict = {}
     obj_frame_list = list(controller.last_event.instance_detections2D.instance_masks.keys())
     obj_list = []
 
@@ -150,17 +196,18 @@ def get_bounding_box(controller):
 
     matching_items = [item for item in obj_frame_list if item in obj_list]
     frame = controller.last_event.frame.copy()
-
+    # print(f"lista immagini foto -> {matching_items}")
     for obj in matching_items:
         (x1, y1, x2, y2) = controller.last_event.instance_detections2D[obj]
         color = list(np.random.choice(range(256), size=3))
-        print(obj, (x1, y1, x2, y2))
+        dict[obj] = {'x1:': x1, 'y1': y1, 'x2': x2, 'y2': y2}
         frame[y1, x1:x2] = color
         frame[y2, x1:x2] = color
         frame[y1:y2, x1] = color
         frame[y1:y2, x2] = color
 
     Image.fromarray(frame).show()
+    return frame, dict
 
 def visualize(house_data):
     if os.path.exists(f"dataset/{house_data['id']}/images"):
@@ -195,24 +242,28 @@ def visualize(house_data):
     _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images",
                         f"/{house_data['id']}_top_down.png")
 
-    coord = show_reachable_position(controller, house_data)
-    controller.step(action="Teleport", position=coord[0])
-    house_data["metadata"]["agent"]["position"] = coord[0]
+    # coord = show_reachable_position(controller, house_data)
+    # controller.step(action="Teleport", position=coord[0])
+    # house_data["metadata"]["agent"]["position"] = coord[0]
     cam_index = 0
 
     # for room in house_data["rooms"]:
     #     cam_index = _add_cameras(room, controller, f"dataset/{house_data['id']}/images", house_data, cam_index)
 
-    _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images",
-                        f"/{house_data['id']}_top_down_after.png")
+    # _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images",
+    #                     f"/{house_data['id']}_top_down_after.png")
     step = 0
+    dicto = {}
     while step < 360:
         controller.step(action="RotateRight", degrees=90)
         # print(list(controller.last_event.instance_detections2D.instance_masks.keys()))
-        get_bounding_box(controller)
+        frame = get_bounding_box(controller)
         Image.fromarray(controller.last_event.frame).save(f"dataset/{house_data['id']}/images/camera_0_{step}.jpg")
+        Image.fromarray(frame[0]).save(f"dataset/{house_data['id']}/images/camera_0_bb_{step}.jpg")
+        dicto[f"camera_0_bb_{step}.jpg"] = frame[1]
         step += 90
-
+    _add_images_key(house_data)
+    _add_photo_images(house_data, dicto)
     # TESTING NON CANCELLARE
     # _dict_to_json(f"dataset/{house_data['id']}/gen_{house_data['id']}.json", house_data)
     # camera = controller.step(
@@ -226,7 +277,7 @@ def visualize(house_data):
 
 # TESTING NON CANCELLARE
 
-with open("dataset/4169/gen_4169.json") as json_file:
-    data = json.load(json_file)
-
-visualize(data)
+# with open("dataset/4169/gen_4169.json") as json_file:
+#     data = json.load(json_file)
+#
+# visualize(data)
