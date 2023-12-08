@@ -50,9 +50,11 @@ def _random_with_N_digits(n):
 
 def _add_huric_id(dizionario, data):
     objs = dizionario['objects']
+    print(dizionario)
     for elem in data['objects']:
         if elem["assetType"] in list(objs.keys()):
             elem["huric_id"] = objs[elem["assetType"]]["atom"]
+            elem["lexical_reference"] = objs[elem["assetType"]]["lexical_reference"]
         else:
             elem["huric_id"] = elem["assetType"] + "_" + str(_random_with_N_digits(13))
 
@@ -61,6 +63,7 @@ def _add_huric_id(dizionario, data):
                 # child_obj = objs[child]
                 if child["assetType"] in list(objs.keys()):
                     child["huric_id"] = objs[child["assetType"]]["atom"]
+                    child["lexical_reference"] = objs[child["assetType"]]["lexical_reference"]
                 else:
                     child["huric_id"] = child["assetType"] + "_" + str(_random_with_N_digits(13))
 
