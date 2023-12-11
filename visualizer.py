@@ -26,13 +26,14 @@ def add_images_to_obj(obj, inverted_dict):
             add_images_to_obj(child, inverted_dict)
 
 
-def _add_photo_images(house: dict, dicto: dict):
+def _add_photo_images(controller: Controller, house: dict, dicto: dict):
     # Creazione di un dizionario invertito
     inverted_dict = {}
     for image_name, objects in dicto.items():
         for obj_id, bbox in objects.items():
             inverted_dict.setdefault(obj_id, []).append({
                 "image": image_name,
+                "resolution": {"width": controller.width, "height": controller.height, "origin": "bottom left"},
                 "bounding_box": bbox
             })
 
@@ -232,7 +233,7 @@ def visualize(house_data):
 
     controller = Controller(
 
-        agentMode="arm",
+        agentMode="default",
         visibilityDistance=1.5,
         scene=house_data,
 
@@ -295,14 +296,14 @@ def visualize(house_data):
                 Image.fromarray(controller.last_event.frame).save(
                     f"dataset/{house_data['id']}/images/{room_name}/normal/position_{pos}/{house_data['id']}_{room_name}_pos_{pos}_{step}.jpg")
                 Image.fromarray(frame[0]).save(
-                    f"dataset/{house_data['id']}/images/{room_name}/bounding_box/position_{pos}/{house_data['id']}_{room_name}_bb_pos_{pos}_{step}.jpg")
-                dicto[f"{house_data['id']}_{room_name}_bb_pos_{pos}_{step}.jpg"] = frame[1]
+                    f"dataset/{house_data['id']}/images/{room_name}/bounding_box/position_{pos}/{house_data['id']}_{room_name}_bounding_box_pos_{pos}_{step}.jpg")
+                dicto[f"images/{room_name}/bounding_box/position_{pos}/{house_data['id']}_{room_name}_bounding_box_pos_{pos}_{step}.jpg"] = frame[1]
                 step += 90
             pos += 1
     plt.savefig(f"dataset/{house_data['id']}/images/{house_data['id']}_positions.jpg")
 
     _add_images_key(house_data)
-    _add_photo_images(house_data, dicto)
+    _add_photo_images(controller, house_data, dicto)
 
 # TESTING NON CANCELLARE
 
