@@ -113,4 +113,6 @@ def xml_parser(file_path: str) -> (dict, str):
                         'z': float(coordinate_elem.get('z'))
                     }
                 dizionario['objects'][entity_type] = obj
+    if _check_rooms(dizionario['rooms']):
+        dizionario['rooms']["LivingRoom"] += 1
     return dizionario, stanza

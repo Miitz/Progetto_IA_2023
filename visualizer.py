@@ -6,16 +6,13 @@ import shutil
 import numpy as np
 from ai2thor.controller import Controller
 from PIL import Image
+from ai2thor.util.metrics import get_shortest_path_to_object
 from matplotlib import pyplot as plt
 
 
 def _dict_to_json(string, _dict):
     with open(f"{string}", "w") as convert_file:
         convert_file.write(json.dumps(_dict))
-
-
-def _find_mid_point(max_val, min_val):
-    return ((max_val - min_val) / 2) + min_val
 
 
 def add_images_to_obj(obj, inverted_dict):
@@ -89,101 +86,119 @@ def _get_top_down_frame(data, controller: Controller, path: str, name: str):
     )
     Image.fromarray(event.third_party_camera_frames[-1]).save(path + name)
 
+def _show_get_top_down_frame(data, controller: Controller):
+    if not isinstance(controller, Controller):
+        raise TypeError("You must pass a controller as an argument")
+    # Setup the top-down camera
+    event = controller.step(action="GetMapViewCameraProperties", raise_for_failure=True)
+    controller.step(action="Teleport", **data["metadata"]["agent"])
+    pose = copy.deepcopy(event.metadata["actionReturn"])
 
-def _setup_camera(controller: Controller, x, z, rotation, path, cam_index, house_data):
-    camera = controller.step(
+    bounds = event.metadata["sceneBounds"]["size"]
+    max_bound = max(bounds["x"], bounds["z"])
+
+    pose["fieldOfView"] = 50
+    pose["position"]["y"] += 1.1 * max_bound
+    pose["orthographic"] = False
+    pose["farClippingPlane"] = 50
+    del pose["orthographicSize"]
+
+    # add the camera to the scene
+    event = controller.step(
         action="AddThirdPartyCamera",
-        position=dict(x=x, y=3, z=z),
-        rotation=dict(x=45, y=rotation, z=0),
-        fieldOfView=60,
+        **pose,
+        skyboxColor="white",
         raise_for_failure=True,
     )
+    Image.fromarray(event.third_party_camera_frames[-1]).show()
+def _find_mid_point(coords):
+    mid_x = sum(coord['x'] for coord in coords) / len(coords)
+    mid_y = sum(coord['z'] for coord in coords) / len(coords)
+    middle_point = {"x": mid_x, "z": mid_y}
 
-    # house_data["cameras"].update({f"camera_{cam_index}": []})
+    # Calculate distances and find the closest coordinate to the middle point
+    closest_coord = None
+    min_distance = float('inf')
 
-    Image.fromarray(camera.third_party_camera_frames[cam_index]).save(
-        path + f"/{house_data['id']}_camera_{cam_index}.png")
-    cam_index = cam_index + 1
-    return cam_index
+    for coord in coords:
+        distance = np.sqrt((coord['x'] - middle_point['x']) ** 2 + (coord['z'] - middle_point['z']) ** 2)
+        if distance < min_distance:
+            min_distance = distance
+            closest_coord = coord
+    return closest_coord
 
 
-def _add_cameras(metadata, controller: Controller, path: str, house_data, cam_index: int):
+def show_reachable_position(controller, metadata, delta):
+    if not isinstance(controller, Controller):
+        raise TypeError("You must pass a controller as an argument")
+    reachable_positions = controller.step(action="GetReachablePositions").metadata["actionReturn"]
+
     consecutive_tuples = [({'x': metadata["floorPolygon"][i]['x'], 'z': metadata["floorPolygon"][i]['z']},
                            {'x': metadata["floorPolygon"][i + 1]['x'], 'z': metadata["floorPolygon"][i + 1]['z']})
                           for i in range(len(metadata["floorPolygon"]) - 1)]
     consecutive_tuples.append(({'x': metadata["floorPolygon"][-1]['x'], 'z': metadata["floorPolygon"][-1]['z']},
                                {'x': metadata["floorPolygon"][0]['x'], 'z': metadata["floorPolygon"][0]['z']}))
+
+    good_points = []
     for index, coord in enumerate(consecutive_tuples):
+        good_coord = []
         x0 = coord[0]['x']
         z0 = coord[0]['z']
         x1 = coord[1]['x']
         z1 = coord[1]['z']
+        x, x_delta, z, z_delta = 0, 0, 0, 0
 
         if x0 == x1:
             if z0 < z1:
-                if z0 == 0.0 or z1 == 0.0:
-                    cam_index = _setup_camera(controller, x0, z1 / 2, 90, path, cam_index, house_data)
-                else:
-                    cam_index = _setup_camera(controller, x0, _find_mid_point(z1, z0), 90, path, cam_index, house_data)
+                z = z0
+                z_delta = z + delta
+                x = x0
+                x_delta = x + delta
             else:
-                if z0 == 0.0 or z1 == 0.0:
-                    cam_index = _setup_camera(controller, x0, z0 / 2, 270, path, cam_index, house_data)
-                else:
-                    cam_index = _setup_camera(controller, x0, _find_mid_point(z0, z1), 270, path, cam_index, house_data)
+                z = z0
+                z_delta = z - delta
+                x = x0
+                x_delta = x - delta
         if z0 == z1:
             if x0 < x1:
-                if x0 == 0.0 or x1 == 0.0:
-                    cam_index = _setup_camera(controller, x1 / 2, z0, 180, path, cam_index, house_data)
-                else:
-                    cam_index = _setup_camera(controller, _find_mid_point(x1, x0), z0, 180, path, cam_index, house_data)
+                x = x0
+                x_delta = x + delta
+                z = z0
+                z_delta = z - delta
             else:
-                if x0 == 0.0 or x1 == 0.0:
-                    cam_index = _setup_camera(controller, x0 / 2, z0, 0, path, cam_index, house_data)
-                else:
-                    cam_index = _setup_camera(controller, _find_mid_point(x0, x1), z0, 0, path, cam_index, house_data)
+                x = x0
+                x_delta = x - delta
+                z = z0
+                z_delta = z + delta
 
-    return cam_index
+        if x_delta > x:
+            if z > z_delta:
+                for elem in reachable_positions:
+                    if x <= elem['x'] <= x_delta and z_delta <= elem['z'] <= z:
+                        good_coord.append(elem)
 
+            else:
+                for elem in reachable_positions:
+                    if x <= elem['x'] <= x_delta and z <= elem['z'] <= z_delta:
+                        good_coord.append(elem)
+        else:
+            if z > z_delta:
+                for elem in reachable_positions:
+                    if x_delta <= elem['x'] <= x and z_delta <= elem['z'] <= z:
+                        good_coord.append(elem)
+            else:
+                for elem in reachable_positions:
+                    if x_delta <= elem['x'] <= x and z <= elem['z'] <= z_delta:
+                        good_coord.append(elem)
 
-def show_reachable_position(controller, data):
-    if not isinstance(controller, Controller):
-        raise TypeError("You must pass a controller as an argument")
-    reachable_positions = controller.step(action="GetReachablePositions").metadata["actionReturn"]
+        if len(good_coord) > 0:
+            point = _find_mid_point(good_coord)
+            xs = point['x']
+            zs = point['z']
+            plt.scatter(xs, zs, color="green")
+            good_points.append(point)
+    return good_points
 
-    coord = data["rooms"][0]["floorPolygon"]
-    coord_x = data["rooms"][0]["floorPolygon"][3]["x"]
-    coord_z = data["rooms"][0]["floorPolygon"][3]["z"]
-    x_max = 3.825
-    z_max = 3.825
-    delta = 1
-    if coord_x + delta > x_max:
-        point_x = coord_x - delta
-    else:
-        point_x = coord_x + delta
-
-    if coord_z + delta > z_max:
-        point_z = coord_z - delta
-    else:
-        point_z = coord_z + delta
-    good_coord = []
-    for elem in reachable_positions:
-        if point_x <= elem["x"] <= coord_x and coord_z <= elem["z"] <= point_z:
-            good_coord.append(elem)
-    print(good_coord)
-    xs = [rp["x"] for rp in reachable_positions]
-    zs = [rp["z"] for rp in reachable_positions]
-    plt.scatter(xs, zs, color="red")
-    # fig, ax = plt.subplots(1, 1)
-    # ax.scatter(xs, zs)
-    # ax.set_xlabel("$x$")
-    # ax.set_ylabel("$z$")
-    # ax.set_title("Reachable Positions in the Scene")
-    # ax.set_aspect("equal")
-    xs = [rp["x"] for rp in good_coord]
-    zs = [rp["z"] for rp in good_coord]
-    plt.scatter(xs, zs, color="blue")
-    plt.show()
-    return good_coord
 
 def get_bounding_box(controller):
     dict = {}
@@ -206,8 +221,8 @@ def get_bounding_box(controller):
         frame[y1:y2, x1] = color
         frame[y1:y2, x2] = color
 
-    Image.fromarray(frame).show()
     return frame, dict
+
 
 def visualize(house_data):
     if os.path.exists(f"dataset/{house_data['id']}/images"):
@@ -217,7 +232,7 @@ def visualize(house_data):
 
     controller = Controller(
 
-        agentMode="default",
+        agentMode="arm",
         visibilityDistance=1.5,
         scene=house_data,
 
@@ -238,42 +253,56 @@ def visualize(house_data):
 
     controller.reset(scene=house_data, renderInstanceSegmentation=True)
     controller.step(action="Teleport", **house_data["metadata"]["agent"])
-
     _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images",
                         f"/{house_data['id']}_top_down.png")
 
-    # coord = show_reachable_position(controller, house_data)
-    # controller.step(action="Teleport", position=coord[0])
-    # house_data["metadata"]["agent"]["position"] = coord[0]
-    cam_index = 0
-
-    # for room in house_data["rooms"]:
-    #     cam_index = _add_cameras(room, controller, f"dataset/{house_data['id']}/images", house_data, cam_index)
-
-    # _get_top_down_frame(house_data, controller, f"dataset/{house_data['id']}/images",
-    #                     f"/{house_data['id']}_top_down_after.png")
-    step = 0
+    reachable_positions = controller.step(action="GetReachablePositions").metadata["actionReturn"]
+    xs = [rp["x"] for rp in reachable_positions]
+    zs = [rp["z"] for rp in reachable_positions]
+    plt.scatter(xs, zs, color="red")
     dicto = {}
-    while step < 360:
-        controller.step(action="RotateRight", degrees=90)
-        # print(list(controller.last_event.instance_detections2D.instance_masks.keys()))
-        frame = get_bounding_box(controller)
-        Image.fromarray(controller.last_event.frame).save(f"dataset/{house_data['id']}/images/camera_0_{step}.jpg")
-        Image.fromarray(frame[0]).save(f"dataset/{house_data['id']}/images/camera_0_bb_{step}.jpg")
-        dicto[f"camera_0_bb_{step}.jpg"] = frame[1]
-        step += 90
+    # for o in house_data["objects"]:
+    #     if "children" in o.keys():
+    #         if len(o["children"]) > 0:
+    #             event = controller.step(action='PositionsFromWhichItemIsInteractable', objectId=o["id"])
+    #             x = event.metadata["actionReturn"]['x'][0]
+    #             z = event.metadata["actionReturn"]['z'][0]
+    #             rotation = event.metadata["actionReturn"]['rotation'][0]
+    #             controller.step(action="Teleport", position={"x": x, "y": 0.95, "z": z}, rotation=rotation)
+    #             frame = get_bounding_box(controller)
+    #             Image.fromarray(frame[0]).show()
+
+    for room in house_data["rooms"]:
+        room_name = room["roomType"]
+        if os.path.exists(f"dataset/{house_data['id']}/images/{room_name}"):
+            shutil.rmtree(f"dataset/{house_data['id']}/images/{room_name}")
+        if not os.path.exists(f"dataset/{house_data['id']}/images/{room_name}"):
+            os.mkdir(f"dataset/{house_data['id']}/images/{room_name}")
+            os.mkdir(f"dataset/{house_data['id']}/images/{room_name}/normal")
+            os.mkdir(f"dataset/{house_data['id']}/images/{room_name}/bounding_box")
+        pos = 0
+        coords = show_reachable_position(controller, room, 1)
+        for c in coords:
+            if not os.path.exists(f"dataset/{house_data['id']}/images/{room_name}/normal/position_{pos}"):
+                os.mkdir(f"dataset/{house_data['id']}/images/{room_name}/normal/position_{pos}")
+            if not os.path.exists(f"dataset/{house_data['id']}/images/{room_name}/bounding_box/position_{pos}"):
+                os.mkdir(f"dataset/{house_data['id']}/images/{room_name}/bounding_box/position_{pos}")
+            controller.step("Teleport", position=c)
+            step = 0
+            while step < 360:
+                controller.step(action="RotateRight", degrees=90)
+                frame = get_bounding_box(controller)
+                Image.fromarray(controller.last_event.frame).save(
+                    f"dataset/{house_data['id']}/images/{room_name}/normal/position_{pos}/{house_data['id']}_{room_name}_pos_{pos}_{step}.jpg")
+                Image.fromarray(frame[0]).save(
+                    f"dataset/{house_data['id']}/images/{room_name}/bounding_box/position_{pos}/{house_data['id']}_{room_name}_bb_pos_{pos}_{step}.jpg")
+                dicto[f"{house_data['id']}_{room_name}_bb_pos_{pos}_{step}.jpg"] = frame[1]
+                step += 90
+            pos += 1
+    plt.savefig(f"dataset/{house_data['id']}/images/{house_data['id']}_positions.jpg")
+
     _add_images_key(house_data)
     _add_photo_images(house_data, dicto)
-    # TESTING NON CANCELLARE
-    # _dict_to_json(f"dataset/{house_data['id']}/gen_{house_data['id']}.json", house_data)
-    # camera = controller.step(
-    #     action="AddThirdPartyCamera",
-    #     position=dict(x=8.756, y=3, z=((6.567 - 2.189) / 2) + 2.189),
-    #     rotation=dict(x=45, y=270, z=0),
-    #     fieldOfView=60,
-    #     raise_for_failure=True,
-    # )
-    # Image.fromarray(camera.third_party_camera_frames[0]).show()
 
 # TESTING NON CANCELLARE
 

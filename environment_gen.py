@@ -48,13 +48,14 @@ def _random_with_N_digits(n):
     return random.randint(range_start, range_end)
 
 
-def _add_huric_id(dizionario, data):
+def _add_huric_info(dizionario, data):
     objs = dizionario['objects']
-    print(dizionario)
     for elem in data['objects']:
         if elem["assetType"] in list(objs.keys()):
             elem["huric_id"] = objs[elem["assetType"]]["atom"]
             elem["lexical_reference"] = objs[elem["assetType"]]["lexical_reference"]
+            elem["contain_ability"] = objs[elem["assetType"]]["contain_ability"]
+            elem["support_ability"] = objs[elem["assetType"]]["support_ability"]
         else:
             elem["huric_id"] = elem["assetType"] + "_" + str(_random_with_N_digits(13))
 
@@ -64,6 +65,8 @@ def _add_huric_id(dizionario, data):
                 if child["assetType"] in list(objs.keys()):
                     child["huric_id"] = objs[child["assetType"]]["atom"]
                     child["lexical_reference"] = objs[child["assetType"]]["lexical_reference"]
+                    child["contain_ability"] = objs[child["assetType"]]["contain_ability"]
+                    child["support_ability"] = objs[child["assetType"]]["support_ability"]
                 else:
                     child["huric_id"] = child["assetType"] + "_" + str(_random_with_N_digits(13))
 
@@ -109,8 +112,6 @@ def environment_generator(dizionario: dict, stanza: str):
     huric_num = {"id": dizionario['id']}
     house.data.update(huric_num)
 
-    # cameras = {"cameras": {}}
-    # house.data.update(cameras)
     """
        Check se bisogna inserire il robot nella stanza "opposta" a quella
        descritta nella "sentence" 
@@ -123,12 +124,12 @@ def environment_generator(dizionario: dict, stanza: str):
                 house.data["metadata"]["agent"] = generate_starting_pose(pose)
 
     """
-       Aggiunta dell'id per ogni oggetto presente nell' ambiente.
+       Aggiunta delle info presenti nel file huric per ogni oggetto presente nell' ambiente.
        Per gli oggetti descritti nel file huric viene mantenuto lo stesso id (atom).
        Per gli altri oggetti viene generato in maniera randomica mantenendo lo stesso stile "dell'atom".
     """
 
-    _add_huric_id(dizionario, house.data)
+    _add_huric_info(dizionario, house.data)
 
     """
        Check e creazione delle cartelle per il salvataggio delle immagini e del file json.
