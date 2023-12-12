@@ -38,6 +38,7 @@
     "Stivali"
   ],
   "Bottle": [
+    "Acqua",
     "Bottiglia"
   ],
   "Bowl": [
@@ -76,6 +77,7 @@
   ],
   "CoffeeMachine": [
     "Caffettiera",
+    "Macchinetta",
     "Macchinetta del caffe",
     "Macchina del caffe"
   ],

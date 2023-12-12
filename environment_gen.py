@@ -13,6 +13,10 @@ from procthor_v2.utils.types import LeafRoom, MetaRoom
 from procthor_v2.generation import HouseGenerator, RoomSpec, PROCTHOR10K_ROOM_SPEC_SAMPLER
 
 
+def _load_json(file_path):
+    with open(file_path) as json_file:
+        return json.load(json_file)
+
 def _dict_to_json(string, _dict):
     with open(f"{string}", "w") as convert_file:
         convert_file.write(json.dumps(_dict))
@@ -49,7 +53,14 @@ def _random_with_N_digits(n):
 
 
 def _add_huric_info(dizionario, data):
+    procthor_objects = _load_json("translation/procthor_objects.json")
     objs = dizionario['objects']
+    for elem in data['windows']:
+        elem["huric_id"] = "finestra_" + str(_random_with_N_digits(13))
+        elem["lexical_reference"] = ["finestra"]
+    for elem in data['doors']:
+        elem["huric_id"] = "porta_" + str(_random_with_N_digits(13))
+        elem["lexical_reference"] = ["porta"]
     for elem in data['objects']:
         if elem["assetType"] in list(objs.keys()):
             elem["huric_id"] = objs[elem["assetType"]]["atom"]
@@ -58,10 +69,13 @@ def _add_huric_info(dizionario, data):
             elem["support_ability"] = objs[elem["assetType"]]["support_ability"]
         else:
             elem["huric_id"] = elem["assetType"] + "_" + str(_random_with_N_digits(13))
-
+            for k, v in procthor_objects.items():
+                if elem["assetType"] == k:
+                    elem["lexical_reference"] = v["lexical_reference"]
+                    elem["contain_ability"] = v["contain_ability"]
+                    elem["support_ability"] = v["support_ability"]
         if "children" in elem.keys():
             for child in elem['children']:
-                # child_obj = objs[child]
                 if child["assetType"] in list(objs.keys()):
                     child["huric_id"] = objs[child["assetType"]]["atom"]
                     child["lexical_reference"] = objs[child["assetType"]]["lexical_reference"]
@@ -69,6 +83,11 @@ def _add_huric_info(dizionario, data):
                     child["support_ability"] = objs[child["assetType"]]["support_ability"]
                 else:
                     child["huric_id"] = child["assetType"] + "_" + str(_random_with_N_digits(13))
+                    for k, v in procthor_objects.items():
+                        if child["assetType"] == k:
+                            child["lexical_reference"] = v["lexical_reference"]
+                            child["contain_ability"] = v["contain_ability"]
+                            child["support_ability"] = v["support_ability"]
 
 
 def _rooms_generator(dizionario: dict):

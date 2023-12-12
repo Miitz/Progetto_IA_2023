@@ -1,5 +1,4 @@
 from procthor_v2.databases import DEFAULT_PROCTHOR_DATABASE
-
 import xml.etree.ElementTree as ET
 import numpy as np
 import random

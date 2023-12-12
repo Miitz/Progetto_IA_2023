@@ -1,0 +1,766 @@
+{
+  "AlarmClock": {
+    "lexical_reference": [
+      "sveglia"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "AluminumFoil": {
+    "lexical_reference": [
+      "foglio_di_alluminio"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Apple": {
+    "lexical_reference": [
+      "mela"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ArmChair": {
+    "lexical_reference": [
+      "poltrona"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "BaseballBat": {
+    "lexical_reference": [
+      "mazza_da_baseball"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "BasketBall": {
+    "lexical_reference": [
+      "palla_da_basket"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Bed": {
+    "lexical_reference": [
+      "letto"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "Blinds": {
+    "lexical_reference": [
+      "tende"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Book": {
+    "lexical_reference": [
+      "libro"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Boots": {
+    "lexical_reference": [
+      "stivali"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Bottle": {
+    "lexical_reference": [
+      "bottiglia"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Bowl": {
+    "lexical_reference": [
+      "ciotola"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Box": {
+    "lexical_reference": [
+      "scatola"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Bread": {
+    "lexical_reference": [
+      "pane"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ButterKnife": {
+    "lexical_reference": [
+      "coltello_da_burro"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "CD": {
+    "lexical_reference": [
+      "cd"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Candle": {
+    "lexical_reference": [
+      "candela"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Cart": {
+    "lexical_reference": [
+      "carretto"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "CellPhone": {
+    "lexical_reference": [
+      "cellulare"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Chair": {
+    "lexical_reference": [
+      "sedia"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "Cloth": {
+    "lexical_reference": [
+      "stoffa"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ClothesDryer": {
+    "lexical_reference": [
+      "asciugatrice"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "CoffeeMachine": {
+    "lexical_reference": [
+      "macchina_da_caffè"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "CoffeeTable": {
+    "lexical_reference": [
+      "tavolino_da_caffè"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "CounterTop": {
+    "lexical_reference": [
+      "mobile_cucina"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "CreditCard": {
+    "lexical_reference": [
+      "carta_di_credito"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Cup": {
+    "lexical_reference": [
+      "tazza"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Desk": {
+    "lexical_reference": [
+      "scrivania"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "DeskLamp": {
+    "lexical_reference": [
+      "lampada_da_scrivania"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Desktop": {
+    "lexical_reference": [
+      "desktop"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "DiningTable": {
+    "lexical_reference": [
+      "tavolo_da_pranzo"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "DishSponge": {
+    "lexical_reference": [
+      "spugna_per_piatti"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "DogBed": {
+    "lexical_reference": [
+      "cuccia_per_cani"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "Doorframe": {
+    "lexical_reference": [
+      "telaio_della_porta"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Doorway": {
+    "lexical_reference": [
+      "uscio"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Dresser": {
+    "lexical_reference": [
+      "cassettiera"
+    ],
+    "contain_ability": "true",
+    "support_ability": "true"
+  },
+  "Dumbbell": {
+    "lexical_reference": [
+      "manubrio"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Egg": {
+    "lexical_reference": [
+      "uovo"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Faucet": {
+    "lexical_reference": [
+      "rubinetto"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "FloorLamp": {
+    "lexical_reference": [
+      "lampada_da_terra"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Footstool": {
+    "lexical_reference": [
+      "poggiapiedi"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Fork": {
+    "lexical_reference": [
+      "forchetta"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Fridge": {
+    "lexical_reference": [
+      "frigorifero"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "GarbageBag": {
+    "lexical_reference": [
+      "sacco_della_spazzatura"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "GarbageCan": {
+    "lexical_reference": [
+      "pattumiera"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "HandTowel": {
+    "lexical_reference": [
+      "asciugamano"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "HandTowelHolder": {
+    "lexical_reference": [
+      "portasciugamani"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "HousePlant": {
+    "lexical_reference": [
+      "pianta_da_appartamento"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Kettle": {
+    "lexical_reference": [
+      "bollitore"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "KeyChain": {
+    "lexical_reference": [
+      "portachiavi"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Knife": {
+    "lexical_reference": [
+      "coltello"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Ladle": {
+    "lexical_reference": [
+      "mestolo"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Laptop": {
+    "lexical_reference": [
+      "portatile"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "LaundryHamper": {
+    "lexical_reference": [
+      "cesto_per_bucato"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Lettuce": {
+    "lexical_reference": [
+      "lattuga"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "LightSwitch": {
+    "lexical_reference": [
+      "interruttore_della_luce"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Microwave": {
+    "lexical_reference": [
+      "microonde"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Mug": {
+    "lexical_reference": [
+      "tazza"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Newspaper": {
+    "lexical_reference": [
+      "giornale"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Ottoman": {
+    "lexical_reference": [
+      "ottomano"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Painting": {
+    "lexical_reference": [
+      "quadro"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Pan": {
+    "lexical_reference": [
+      "padella"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "PaperTowelRoll": {
+    "lexical_reference": [
+      "rotolo_di_carta_assorbente"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Pen": {
+    "lexical_reference": [
+      "penna"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Pencil": {
+    "lexical_reference": [
+      "matita"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "PepperShaker": {
+    "lexical_reference": [
+      "pepe"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Pillow": {
+    "lexical_reference": [
+      "cuscino"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Plate": {
+    "lexical_reference": [
+      "piatto"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Plunger": {
+    "lexical_reference": [
+      "stantuffo"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Pot": {
+    "lexical_reference": [
+      "pentola"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Potato": {
+    "lexical_reference": [
+      "patata"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "RemoteControl": {
+    "lexical_reference": [
+      "telecomando"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "RoomDecor": {
+    "lexical_reference": [
+      "decorazione"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Safe": {
+    "lexical_reference": [
+      "cassaforte"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "SaltShaker": {
+    "lexical_reference": [
+      "saliera"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ScrubBrush": {
+    "lexical_reference": [
+      "spazzola"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ShelvingUnit": {
+    "lexical_reference": [
+      "scaffalatura"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "ShowerCurtain": {
+    "lexical_reference": [
+      "tenda_da_doccia"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ShowerHead": {
+    "lexical_reference": [
+      "soffione"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "SideTable": {
+    "lexical_reference": [
+      "tavolino"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "Sink": {
+    "lexical_reference": [
+      "lavandino"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "SoapBar": {
+    "lexical_reference": [
+      "saponetta"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "SoapBottle": {
+    "lexical_reference": [
+      "bottiglia_di_sapone"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Sofa": {
+    "lexical_reference": [
+      "sofa",
+      "divano"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "Spatula": {
+    "lexical_reference": [
+      "spatola"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Spoon": {
+    "lexical_reference": [
+      "cucchiaio"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "SprayBottle": {
+    "lexical_reference": [
+      "flacone_spray"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Statue": {
+    "lexical_reference": [
+      "statua"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Stool": {
+    "lexical_reference": [
+      "sgabello"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "TVStand": {
+    "lexical_reference": [
+      "mobile_tv"
+    ],
+    "contain_ability": "false",
+    "support_ability": "true"
+  },
+  "TableTopDecor": {
+    "lexical_reference": [
+      "arredamento_da_tavolo"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "TeddyBear": {
+    "lexical_reference": [
+      "orsacchiotto"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Television": {
+    "lexical_reference": [
+      "televisione"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "TennisRacket": {
+    "lexical_reference": [
+      "racchetta_da_tennis"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "TissueBox": {
+    "lexical_reference": [
+      "scatola_di_fazzoletti"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Toaster": {
+    "lexical_reference": [
+      "tostapane"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Toilet": {
+    "lexical_reference": [
+      "gabinetto"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ToiletPaper": {
+    "lexical_reference": [
+      "carta_igienica"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "ToiletPaperHanger": {
+    "lexical_reference": [
+      "supporto_per_carta_igienica"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Tomato": {
+    "lexical_reference": [
+      "pomodoro"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Towel": {
+    "lexical_reference": [
+      "asciugamano"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "TowelHolder": {
+    "lexical_reference": [
+      "porta_asciugamani"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "VacuumCleaner": {
+    "lexical_reference": [
+      "aspirapolverepulitore"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "Vase": {
+    "lexical_reference": [
+      "vaso"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "WashingMachine": {
+    "lexical_reference": [
+      "lavatrice"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Watch": {
+    "lexical_reference": [
+      "orologio"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "WateringCan": {
+    "lexical_reference": [
+      "annaffiatoio"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  },
+  "Window": {
+    "lexical_reference": [
+      "finestra"
+    ],
+    "contain_ability": "false",
+    "support_ability": "false"
+  },
+  "WineBottle": {
+    "lexical_reference": [
+      "bottiglia_di_vino"
+    ],
+    "contain_ability": "true",
+    "support_ability": "false"
+  }
+}
