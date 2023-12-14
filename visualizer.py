@@ -216,7 +216,7 @@ def get_bounding_box(controller):
     for obj in matching_items:
         (x1, y1, x2, y2) = controller.last_event.instance_detections2D[obj]
         color = list(np.random.choice(range(256), size=3))
-        dict[obj] = {'x1:': x1, 'y1': y1, 'x2': x2, 'y2': y2}
+        dict[obj] = {'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2}
         frame[y1, x1:x2] = color
         frame[y2, x1:x2] = color
         frame[y1:y2, x1] = color
