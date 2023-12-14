@@ -1,7 +1,26 @@
 from parser import xml_parser
 from environment_gen import environment_generator
 from visualizer import visualize
+import argparse
 
-data, room = xml_parser("huric/it/4169.hrc")
-house_data = environment_generator(data, room)
-visualize(house_data)
+
+def main():
+    parser = argparse.ArgumentParser(description="Percorso File Huric")
+    parser.add_argument("file_path", help="Il percorso del file hrc da analizzare")
+
+    args = parser.parse_args()
+
+    try:
+        with open(args.file_path, 'r') as file:
+            data, room = xml_parser(args.file_path)
+            house_data = environment_generator(data, room)
+            visualize(house_data)
+    except FileNotFoundError:
+        print(f"Il file non è stato trovato: {args.file_path}")
+    except Exception as e:
+        print(f"Si è verificato un errore: {e}")
+
+
+if __name__ == "__main__":
+    main()
+
