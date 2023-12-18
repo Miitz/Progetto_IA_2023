@@ -95,8 +95,6 @@ def _filter_hrc_spawnable_objects(new_room_object, spawnable_objects):
     for k, v in new_room_object.items():
         if len(v['contain']) > 0:
             for o in v['contain']:
-                print(k)
-                print(o)
                 new_spawnable_objects.append(
                     list(filter(lambda x: 'childObjectType' in x and x['childObjectType'] == o and x['receptacleType'] == k, spawnable_objects)))
 

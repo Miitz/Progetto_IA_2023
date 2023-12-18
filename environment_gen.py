@@ -17,6 +17,7 @@ def _load_json(file_path):
     with open(file_path) as json_file:
         return json.load(json_file)
 
+
 def _dict_to_json(string, _dict):
     with open(f"{string}", "w") as convert_file:
         convert_file.write(json.dumps(_dict))

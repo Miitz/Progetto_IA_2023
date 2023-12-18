@@ -212,7 +212,6 @@ def get_bounding_box(controller):
 
     matching_items = [item for item in obj_frame_list if item in obj_list]
     frame = controller.last_event.frame.copy()
-    # print(f"lista immagini foto -> {matching_items}")
     for obj in matching_items:
         (x1, y1, x2, y2) = controller.last_event.instance_detections2D[obj]
         color = list(np.random.choice(range(256), size=3))
@@ -262,16 +261,6 @@ def visualize(house_data):
     zs = [rp["z"] for rp in reachable_positions]
     plt.scatter(xs, zs, color="red")
     dicto = {}
-    # for o in house_data["objects"]:
-    #     if "children" in o.keys():
-    #         if len(o["children"]) > 0:
-    #             event = controller.step(action='PositionsFromWhichItemIsInteractable', objectId=o["id"])
-    #             x = event.metadata["actionReturn"]['x'][0]
-    #             z = event.metadata["actionReturn"]['z'][0]
-    #             rotation = event.metadata["actionReturn"]['rotation'][0]
-    #             controller.step(action="Teleport", position={"x": x, "y": 0.95, "z": z}, rotation=rotation)
-    #             frame = get_bounding_box(controller)
-    #             Image.fromarray(frame[0]).show()
 
     for room in house_data["rooms"]:
         room_name = room["roomType"]
@@ -304,10 +293,3 @@ def visualize(house_data):
 
     _add_images_key(house_data)
     _add_photo_images(controller, house_data, dicto)
-
-# TESTING NON CANCELLARE
-
-# with open("dataset/4169/gen_4169.json") as json_file:
-#     data = json.load(json_file)
-#
-# visualize(data)
