@@ -51,7 +51,8 @@ Generazione completa del file JSON con descrizione dell'ambiente e immagini util
 python runner.py --visualize "huric/it/_file_.huric"
 ```
 Per ogni file HuRIC generato utuilizzando la flag `--visualize` o `-v` verrà creata una cartella di questo tipo:
-
+    
+    huric_file                                          # Cartella generale file HuRIC
     ├── images                                          # Cartella principale contenente le immagini dell'ambiente
     │   ├── example_room                                # Cartella generata per ogni stanza dell'ambiente
     │   │   ├── bounding_box                            # Cartella contenente immagini con bounding_box
