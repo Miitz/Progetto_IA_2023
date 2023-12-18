@@ -41,7 +41,34 @@ Lista dei package necessari -> `requirements.txt`
 pip install -r requirements.txt
 ```
 
-### Esempio di utilizzo
+### Utilizzo
+Generazione del file JSON con descrizione dell'ambiente senza immagini
 ```bash
 python runner.py "huric/it/_file_.huric"
 ```
+Generazione completa del file JSON con descrizione dell'ambiente e immagini utilizzando la flag `--visualize` o `-v`
+```bash
+python runner.py --visualize "huric/it/_file_.huric"
+```
+Per ogni file HuRIC generato utuilizzando la flag `--visualize` o `-v` verrà creata una cartella di questo tipo:
+
+    ├── images                                          # Cartella principale contenente le immagini dell'ambiente
+    │   ├── example_room                                # Cartella generata per ogni stanza dell'ambiente
+    │   │   ├── bounding_box                            # Cartella contenente immagini con bounding_box
+    │   │   │   ├── position_0                          # Cartella contenente le immagini generate in posizione 0
+    │   │   │   │   ├── image_bounding_box_pos_0_0.jpg
+    │   │   │   │   └── ...
+    │   │   │   ├── position_1                          # Cartella contenente le immagini generate in posizione 1
+    │   │   │   │   └── ...
+    │   │   │   └── ...
+    │   │   └── normal                                  # Cartella contenente immagini senza bounding_box
+    │   │       ├── position_0
+    │   │       │   ├── image_pos_0_0.jpg
+    │   │       │   └── ...
+    │   │       ├── position_1
+    │   │       │   └── ...
+    │   │       └── ...
+    │   ├── positions.jpg                               # Immagine delle posizioni raggiungibili dal robot
+    │   └── top_down.png                                # Immagine aerea dell'ambiente
+    ├── huric_file.hrc                                  # File HuRIC in input
+    └── gen_huric_file.json                             # File JSON in output con descrizione dell'ambiente e immagini
