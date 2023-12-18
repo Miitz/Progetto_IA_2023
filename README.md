@@ -44,11 +44,11 @@ pip install -r requirements.txt
 ### Utilizzo
 Generazione del file JSON con descrizione dell'ambiente senza immagini
 ```bash
-python runner.py "huric/it/_file_.huric"
+python runner.py "path completo del file huric"
 ```
 Generazione completa del file JSON con descrizione dell'ambiente e immagini utilizzando la flag `--visualize` o `-v`
 ```bash
-python runner.py --visualize "huric/it/_file_.huric"
+python runner.py --visualize "path completo del file huric"
 ```
 Per ogni file HuRIC generato utuilizzando la flag `--visualize` o `-v` verrà creata una cartella di questo tipo:
     
