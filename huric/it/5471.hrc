@@ -2,11 +2,11 @@
 <huricExample id="5471">
   <commands>
     <command>
-      <sentence>riavvia il wi-fi</sentence>
+      <sentence>riavvia il computer</sentence>
       <tokens>
         <token id="1" lemma="riavviare" pos="V" surface="riavvia"/>
         <token id="2" lemma="il" pos="RD" surface="il"/>
-        <token id="3" lemma="wi-fi" pos="S" surface="wi-fi"/>
+        <token id="3" lemma="computer" pos="S" surface="computer"/>
       </tokens>
       <dependencies/>
       <semantics>
@@ -28,7 +28,7 @@
   </commands>
   <semanticMap>
     <entities>
-      <entity atom="wifi_1484052292599" type="Wifi">
+      <entity atom="computer_1484052292599" type="Computer">
         <attributes>
           <attribute name="contain_ability">
             <value>false</value>
@@ -37,7 +37,7 @@
             <value>false</value>
           </attribute>
           <attribute name="lexical_references">
-            <value>wifi</value>
+            <value>computer</value>
           </attribute>
         </attributes>
         <coordinate angle="0.0" x="11.0" y="11.0" z="0.0"/>

@@ -2,13 +2,13 @@
 <huricExample id="4265">
   <commands>
     <command>
-      <sentence>metti la padella sul fornello</sentence>
+      <sentence>metti la padella sul bancone</sentence>
       <tokens>
         <token id="1" lemma="mettere" pos="V" surface="metti"/>
         <token id="2" lemma="la" pos="RD" surface="la"/>
         <token id="3" lemma="padella" pos="S" surface="padella"/>
         <token id="4" lemma="su" pos="EA" surface="sul"/>
-        <token id="5" lemma="fornello" pos="S" surface="fornello"/>
+        <token id="5" lemma="bancone" pos="S" surface="fornello"/>
       </tokens>
       <dependencies/>
       <semantics>
@@ -132,16 +132,16 @@
         </attributes>
         <coordinate angle="0.0" x="9.0" y="14.0" z="0.0"/>
       </entity>
-      <entity atom="fornelli_1484051952683" type="Fornelli">
+      <entity atom="bacone_1484051952683" type="Bancone">
         <attributes>
           <attribute name="contain_ability">
             <value>false</value>
           </attribute>
           <attribute name="support_ability">
-            <value>false</value>
+            <value>true</value>
           </attribute>
           <attribute name="lexical_references">
-            <value>fornelli</value>
+            <value>bancone</value>
           </attribute>
         </attributes>
         <coordinate angle="0.0" x="5.0" y="9.0" z="0.0"/>

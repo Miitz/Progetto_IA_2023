@@ -2,12 +2,12 @@
 <huricExample id="5476">
   <commands>
     <command>
-      <sentence>porta mi il portafoglio sul cuscino</sentence>
+      <sentence>porta mi il telefono sul cuscino</sentence>
       <tokens>
         <token id="1" lemma="portare" pos="V" surface="porta"/>
         <token id="2" lemma="mi" pos="PC" surface="mi"/>
         <token id="3" lemma="il" pos="RD" surface="il"/>
-        <token id="4" lemma="portafoglio" pos="S" surface="portafoglio"/>
+        <token id="4" lemma="telefono" pos="S" surface="telefono"/>
         <token id="5" lemma="su" pos="EA" surface="sul"/>
         <token id="6" lemma="cuscino" pos="S" surface="cuscino"/>
       </tokens>
@@ -92,7 +92,7 @@
         </attributes>
         <coordinate angle="0.0" x="5.0" y="8.0" z="0.0"/>
       </entity>
-      <entity atom="portafoglio_1484050934078" type="Portafoglio">
+      <entity atom="telefono_1484050934078" type="Telefono">
         <attributes>
           <attribute name="contain_ability">
             <value>true</value>
@@ -101,7 +101,7 @@
             <value>false</value>
           </attribute>
           <attribute name="lexical_references">
-            <value>portafoglio</value>
+            <value>telefono</value>
           </attribute>
         </attributes>
         <coordinate angle="0.0" x="15.0" y="3.0" z="0.0"/>

@@ -2,13 +2,13 @@
 <huricExample id="4198">
   <commands>
     <command>
-      <sentence>cerca attentamente il mio portafoglio per favore</sentence>
+      <sentence>cerca attentamente il mio telefono per favore</sentence>
       <tokens>
         <token id="1" lemma="cercare" pos="V" surface="cerca"/>
         <token id="2" lemma="attentamente" pos="B" surface="attentamente"/>
         <token id="3" lemma="il" pos="RD" surface="il"/>
         <token id="4" lemma="mio" pos="AP" surface="mio"/>
-        <token id="5" lemma="portafoglio" pos="S" surface="portafoglio"/>
+        <token id="5" lemma="telefono" pos="S" surface="portafoglio"/>
         <token id="6" lemma="per" pos="E" surface="per"/>
         <token id="7" lemma="favore" pos="S" surface="favore"/>
       </tokens>
@@ -64,10 +64,10 @@
         </attributes>
         <coordinate angle="0.0" x="11.0" y="6.0" z="0.0"/>
       </entity>
-      <entity atom="portafoglio_1484051817466" type="Portafoglio">
+      <entity atom="telefono_1484051817466" type="Telefono">
         <attributes>
           <attribute name="contain_ability">
-            <value>true</value>
+            <value>false</value>
           </attribute>
           <attribute name="support_ability">
             <value>false</value>

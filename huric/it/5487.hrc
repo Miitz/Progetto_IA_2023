@@ -2,11 +2,11 @@
 <huricExample id="5487">
   <commands>
     <command>
-      <sentence>porta il cacciavite a daniele</sentence>
+      <sentence>porta il coltello a daniele</sentence>
       <tokens>
         <token id="1" lemma="portare" pos="V" surface="porta"/>
         <token id="2" lemma="il" pos="RD" surface="il"/>
-        <token id="3" lemma="cacciavite" pos="S" surface="cacciavite"/>
+        <token id="3" lemma="coltello" pos="S" surface="coltello"/>
         <token id="4" lemma="a" pos="E" surface="a"/>
         <token id="5" lemma="daniele" pos="SP" surface="daniele"/>
       </tokens>
@@ -90,7 +90,7 @@
         </attributes>
         <coordinate angle="0.0" x="11.0" y="6.0" z="0.0"/>
       </entity>
-      <entity atom="cacciavite_1484052587414" type="Cacciavite">
+      <entity atom="coltello_1484052587414" type="Coltello">
         <attributes>
           <attribute name="contain_ability">
             <value>false</value>
@@ -99,7 +99,7 @@
             <value>false</value>
           </attribute>
           <attribute name="lexical_references">
-            <value>cacciavite</value>
+            <value>coltello</value>
           </attribute>
         </attributes>
         <coordinate angle="0.0" x="13.0" y="7.0" z="0.0"/>

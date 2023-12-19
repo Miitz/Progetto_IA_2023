@@ -2,12 +2,12 @@
 <huricExample id="4512">
   <commands>
     <command>
-      <sentence>trova il mio portafoglio</sentence>
+      <sentence>trova il mio telefono</sentence>
       <tokens>
         <token id="1" lemma="trovare" pos="V" surface="trova"/>
         <token id="2" lemma="il" pos="RD" surface="il"/>
         <token id="3" lemma="mio" pos="AP" surface="mio"/>
-        <token id="4" lemma="portafoglio" pos="S" surface="portafoglio"/>
+        <token id="4" lemma="telefono" pos="S" surface="telefono"/>
       </tokens>
       <dependencies/>
       <semantics>
@@ -100,7 +100,7 @@
         </attributes>
         <coordinate angle="0.0" x="0.0" y="13.0" z="0.0"/>
       </entity>
-      <entity atom="portafoglio_1484051839826" type="Portafoglio">
+      <entity atom="telefono_1484051839826" type="Telefono">
         <attributes>
           <attribute name="contain_ability">
             <value>true</value>
@@ -109,7 +109,7 @@
             <value>false</value>
           </attribute>
           <attribute name="lexical_references">
-            <value>portafoglio</value>
+            <value>telefono</value>
           </attribute>
         </attributes>
         <coordinate angle="0.0" x="11.0" y="11.0" z="0.0"/>
