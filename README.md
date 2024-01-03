@@ -30,11 +30,12 @@ Attivare l'ambiente virtuale
   ```bash
   source nome_ambiente/bin/activate
   ```
+  <!--
 * `Windows`
   
   ```powershell
   nome_ambiente\bin\Activate.ps1
-  ```
+  ```-->
 ### Installazione dei requisiti
 Lista dei package necessari -> `requirements.txt`
 ```bash
