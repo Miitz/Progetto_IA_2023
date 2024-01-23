@@ -33,7 +33,7 @@ def _add_photo_images(controller: Controller, house: dict, dicto: dict):
         for obj_id, bbox in objects.items():
             inverted_dict.setdefault(obj_id, []).append({
                 "image": image_name,
-                "resolution": {"width": controller.width, "height": controller.height, "origin": "bottom left"},
+                "resolution": {"width": controller.width, "height": controller.height, "origin": "upper left"},
                 "bounding_box": bbox
             })
 
